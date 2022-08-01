@@ -1,17 +1,18 @@
 package com.example.demo;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloWorldController {
 
-    @RequestMapping
+    @GetMapping
     public String helloWorld(){
         return "Hello World from Spring Boot";
     }
 
-    @RequestMapping("/goodbye")
+    @GetMapping("/goodbye")
     public String goodbye(){
         return "Goodbye from Spring Boot";
     }
