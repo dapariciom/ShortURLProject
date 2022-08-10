@@ -1,0 +1,14 @@
+version: "3"
+services:
+  mongodb-container:
+    image: mongo:latest
+    container_name: "mongodb-container"
+    ports:
+      - 27017:27017
+  demo-url-project:
+    image: demo-url-project:1.0
+    container_name: demo-url-project
+    ports:
+      - 8080:8080
+    links:
+      - mongodb-container
