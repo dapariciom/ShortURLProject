@@ -1,25 +1,20 @@
 # ShortURLProject
 
-##To run the project with Docker
+##To run the project with Docker Compose
 
 Clean previous .jar versions and build project with maven
 ```
 mvn clean install
 ```
 
-Create a docker image with the generated .jar
+Navigate to resources folder
 ```
-docker build -t demo-docker.jar .
-```
-
-Run docker image
-```
-docker run -p 9090:8080 demo-docker.jar
+demo\src\main\resources
 ```
 
-Open a web browser on
+Run docker compose
 ```
-http://localhost:9090/
+docker-compose up
 ```
 
 Enjoy :blush:
