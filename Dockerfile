@@ -1,4 +1,4 @@
 FROM openjdk:11
 EXPOSE 8080
-ADD target/demo-url-project.jar demo-url-project.jar
-ENTRYPOINT ["java", "-jar", "/demo-url-project.jar"]
+ADD target/shorten-url-service.jar shorten-url-service.jar
+ENTRYPOINT ["java", "-jar", "/shorten-url-service.jar"]

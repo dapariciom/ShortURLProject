@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class DemoController {
+public class ShortenUrlController {
 
     @Autowired
     private UrlRepository repository;
@@ -20,11 +20,15 @@ public class DemoController {
 
     @PostMapping("/url")
     public Url saveUrl(@RequestBody Url url){
+
+        //TODO: Use ResponseEntity
         return repository.save(url);
     }
 
     @GetMapping("/url")
     public List<Url> getUrls(){
+
+        //TODO: Use ResponseEntity
         return repository.findAll();
     }
 

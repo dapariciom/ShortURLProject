@@ -53,6 +53,6 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>demo-url-project</finalName>
+		<finalName>shorten-url-service</finalName>
 	</build>
 </project>

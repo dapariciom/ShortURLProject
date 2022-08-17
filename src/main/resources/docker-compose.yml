@@ -6,8 +6,8 @@ services:
     ports:
       - 27017:27017
   demo-url-project:
-    image: demo-url-project:1.0
-    container_name: demo-url-project
+    image: shorten-url-service:1.0
+    container_name: shorten-url-service
     ports:
       - 8080:8080
     links:
