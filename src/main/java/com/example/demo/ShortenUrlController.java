@@ -1,8 +1,10 @@
 package com.example.demo;
 
-import com.example.demo.dao.UrlRepository;
 import com.example.demo.model.Url;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,25 +13,27 @@ import java.util.List;
 public class ShortenUrlController {
 
     @Autowired
-    private UrlRepository repository;
+    private ShortenUrlService shortenUrlService;
 
     @GetMapping
-    public String helloWorld(){
-        return "Hello World from Spring Boot";
+    public ResponseEntity<String> helloWorld(){
+        String msg = "Hello World from Spring Boot";
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<String>(msg,headers, HttpStatus.OK);
     }
 
     @PostMapping("/url")
-    public Url saveUrl(@RequestBody Url url){
-
-        //TODO: Use ResponseEntity
-        return repository.save(url);
+    public ResponseEntity<Void> saveUrl(@RequestBody Url url){
+        shortenUrlService.saveUrl(url);
+        HttpHeaders headers = new HttpHeaders();
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
     }
 
     @GetMapping("/url")
-    public List<Url> getUrls(){
-
-        //TODO: Use ResponseEntity
-        return repository.findAll();
+    public ResponseEntity<List<Url>> getUrls(){
+        List<Url> urlList = shortenUrlService.getUrls();
+        HttpHeaders headers = new HttpHeaders();
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(urlList);
     }
 
 }

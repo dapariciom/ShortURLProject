@@ -7,9 +7,14 @@ Clean previous .jar versions and build project with maven
 mvn clean install
 ```
 
+Build shorten-url-service image
+```
+docker build -t shorten-url-service:1.0 .
+```
+
 Navigate to resources folder
 ```
-demo\src\main\resources
+shorten-url-service\src\main\resources
 ```
 
 Run docker compose
