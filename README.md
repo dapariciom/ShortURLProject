@@ -12,6 +12,11 @@ Build shorten-url-service image
 docker build -t shorten-url-service:1.0 .
 ```
 
+//TODO: Check configuration start up process
+```
+
+```
+
 Navigate to resources folder
 ```
 shorten-url-service\src\main\resources
