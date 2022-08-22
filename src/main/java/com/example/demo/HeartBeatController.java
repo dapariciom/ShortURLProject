@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HeartBeatController {
 
-    @GetMapping
+    @GetMapping("api/v1/heartbeat")
     public ResponseEntity<String> heartBeat(){
         String msg = "UP";
         HttpHeaders headers = new HttpHeaders();

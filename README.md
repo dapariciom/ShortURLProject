@@ -12,14 +12,11 @@ Build shorten-url-service image
 docker build -t shorten-url-service:1.0 .
 ```
 
-//TODO: Check configuration start up process
+Build mongoDB image
 ```
+docker pull mongo:latest
 
-```
-
-Navigate to resources folder
-```
-shorten-url-service\src\main\resources
+docker run -d -p 27017:27027 --name mongodb-container mongo:latest
 ```
 
 Run docker compose
