@@ -7,7 +7,5 @@ import lombok.*;
 @Getter
 @Setter
 public class UrlRequest {
-    private int id;
     private String url;
-    private String expirationDate;
 }

@@ -28,24 +28,13 @@ public class ShortenUrlService {
             String encodedUrl = encodeUrl(urlRequest.getUrl());
 
             UrlEntity url = new UrlEntity();
-            url.setId(urlRequest.getId());
             url.setCreationDate(LocalDateTime.now());
             url.setOriginalUrl(urlRequest.getUrl());
             url.setShortUrl(encodedUrl);
             url.setDeleted(false);
-            url.setExpirationDate(getExpirationDate(urlRequest.getExpirationDate(), url.getCreationDate()));
-
             return save(url);
         }
         return null;
-    }
-
-    private LocalDateTime getExpirationDate(String expirationDate, LocalDateTime creationDate){
-        if(StringUtils.isBlank(expirationDate)){
-            return creationDate.plusHours(MAX_EXPIRATION_HOURS);
-        }
-        LocalDateTime expirationDateObj = LocalDateTime.parse(expirationDate);
-        return expirationDateObj;
     }
 
     private String encodeUrl(String url){
