@@ -7,9 +7,16 @@ Clean previous .jar versions and build project with maven
 mvn clean install
 ```
 
-Navigate to resources folder
+Build shorten-url-service image
 ```
-demo\src\main\resources
+docker build -t shorten-url-service:1.0 .
+```
+
+Build mongoDB image
+```
+docker pull mongo:latest
+
+docker run -d -p 27017:27027 --name mongodb-container mongo:latest
 ```
 
 Run docker compose
