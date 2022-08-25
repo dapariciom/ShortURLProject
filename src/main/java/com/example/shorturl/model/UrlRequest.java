@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.example.shorturl.model;
 
 import lombok.*;
 
