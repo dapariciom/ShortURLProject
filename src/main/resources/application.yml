@@ -4,3 +4,8 @@ spring:
       database: UrlEntity
       host: localhost
       port: 27017
+
+server:
+  port: 8080
+  error:
+    include-message: always
