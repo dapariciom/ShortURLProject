@@ -11,8 +11,8 @@
 	<groupId>com.springdemo</groupId>
 	<artifactId>shorten-url-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>shorten-url-service</name>
+	<description>Shorten Url Service</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
