@@ -61,6 +61,7 @@ public class ShortenUrlController {
 
     @GetMapping("/redirect/{shortLink}")
     public ResponseEntity<UrlResponse> redirectUrl(@PathVariable String shortLink, HttpServletResponse response) throws IOException {
+
         HttpHeaders headers = new HttpHeaders();
 
         //TODO: Handle empty path variable
@@ -87,29 +88,41 @@ public class ShortenUrlController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<UrlEntity>> findById(@PathVariable Integer id){
+
         Optional<UrlEntity> urlList = shortenUrlService.findById(id);
+
         HttpHeaders headers = new HttpHeaders();
+
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(urlList);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Integer id){
+
         shortenUrlService.softDeleteById(id);
+
         HttpHeaders headers = new HttpHeaders();
+
         return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteAll(){
+
         shortenUrlService.softDeleteAll();
+
         HttpHeaders headers = new HttpHeaders();
+
         return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
     }
 
     @GetMapping
     public ResponseEntity<List<UrlEntity>> getUrls(){
+
         List<UrlEntity> urlList = shortenUrlService.findAll();
+
         HttpHeaders headers = new HttpHeaders();
+
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(urlList);
     }
 

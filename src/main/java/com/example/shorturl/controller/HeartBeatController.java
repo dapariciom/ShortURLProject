@@ -14,6 +14,6 @@ public class HeartBeatController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        return new ResponseEntity<>("UP",headers, HttpStatus.OK);
+        return new ResponseEntity<>("UP", headers, HttpStatus.OK);
     }
 }
