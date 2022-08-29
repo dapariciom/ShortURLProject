@@ -22,7 +22,7 @@ public class UrlEntity {
     public static final String SEQUENCE_NAME = "user_sequence";
 
     @Id
-    private int id;
+    private long id;
     @NotNull
     private String originalUrl;
     private String shortUrl;

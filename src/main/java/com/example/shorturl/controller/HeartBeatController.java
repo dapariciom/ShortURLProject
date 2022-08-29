@@ -13,6 +13,7 @@ public class HeartBeatController {
     public ResponseEntity<String> heartBeat(){
 
         HttpHeaders headers = new HttpHeaders();
+
         return new ResponseEntity<>("UP",headers, HttpStatus.OK);
     }
 }

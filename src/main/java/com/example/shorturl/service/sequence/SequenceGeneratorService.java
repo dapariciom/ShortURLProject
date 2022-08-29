@@ -20,7 +20,7 @@ public class SequenceGeneratorService implements ISequenceGeneratorService {
 
 
     @Override
-    public int getSequenceNumber(String sequenceName) {
+    public long getSequenceNumber(String sequenceName) {
         //get sequence no
         Query query = new Query(Criteria.where("id").is(sequenceName));
         //update the sequence no
