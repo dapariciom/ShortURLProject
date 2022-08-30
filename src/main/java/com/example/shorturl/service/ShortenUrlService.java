@@ -23,6 +23,8 @@ import static com.example.shorturl.model.UrlEntity.SEQUENCE_NAME;
 @Service
 public class ShortenUrlService implements IShortenUrlService{
 
+    long EXPIRATION_TIME_HOURS = 1;
+
     private final UrlRepository urlRepository;
     private final SequenceGeneratorService sequenceGeneratorService;
 
@@ -31,12 +33,7 @@ public class ShortenUrlService implements IShortenUrlService{
         this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    @Override
-    public Optional<UrlEntity> shortUrl(UrlRequest urlRequest) throws UrlNotFoundException{
-
-        if(Objects.isNull(urlRequest) || StringUtils.isEmpty(urlRequest.getUrl())){
-            throw new UrlNotFoundException("Url request is missing or empty");
-        }
+    public Optional<UrlEntity> shortUrl(UrlRequest urlRequest) {
 
         String encodedUrl = encodeUrl(urlRequest.getUrl());
 
@@ -47,6 +44,8 @@ public class ShortenUrlService implements IShortenUrlService{
                 .completeShortUrl("http://localhost:8080/api/v1/url/redirect/" + encodedUrl)
                 .originalUrl(urlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
+                //TODO: Logic to set expiration time
+                .expirationDate(LocalDateTime.now().plusHours(EXPIRATION_TIME_HOURS))
                 .isDeleted(false)
                 .build();
 
@@ -67,7 +66,7 @@ public class ShortenUrlService implements IShortenUrlService{
         return  urlList.get(0);
     }
 
-    public Optional<UrlEntity> save(UrlEntity urlEntity){
+    private Optional<UrlEntity> save(UrlEntity urlEntity){
         return Optional.ofNullable(urlRepository.save(urlEntity));
     }
 
