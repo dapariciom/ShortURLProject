@@ -22,9 +22,9 @@ public interface IShortenUrlService {
      * This method uses an encoded short URL to obtain a linked long URL
      *
      * @param url This is the short URL in String format
-     * @return UrlEntity This returns the entity that contains the long URL and
+     * @return Optional<UrlEntity> This returns the entity that contains the long URL and
      * other related parameters
      */
-    UrlEntity getEncodedUrl(String url);
+    Optional<UrlEntity> getEncodedUrl(String url);
 
 }

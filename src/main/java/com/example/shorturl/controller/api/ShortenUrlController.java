@@ -67,14 +67,16 @@ public class ShortenUrlController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
         }
 
-        UrlEntity url = shortenUrlService.getEncodedUrl(shortLink);
+        Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortLink);
 
-        if(url == null){
+        if(optionalUrl.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found");
         }
 
+        UrlEntity url = optionalUrl.get();
+
         if(url.getExpirationDate().isBefore(LocalDateTime.now())){
-            throw new ResponseStatusException(HttpStatus.OK, "Url has expired");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Url has expired");
         }
 
         //TODO: Handle IOException
