@@ -4,24 +4,23 @@ import com.example.shorturl.dao.UrlRepository;
 import com.example.shorturl.model.UrlEntity;
 import com.example.shorturl.model.UrlRequest;
 import com.example.shorturl.service.sequence.SequenceGeneratorService;
-import com.example.shorturl.utils.UrlNotFoundException;
 import com.google.common.hash.Hashing;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.StringUtils;
 
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.example.shorturl.model.UrlEntity.SEQUENCE_NAME;
 
 @Service
 public class ShortenUrlService implements IShortenUrlService{
+
+    long EXPIRATION_TIME = 20;
 
     private final UrlRepository urlRepository;
     private final SequenceGeneratorService sequenceGeneratorService;
@@ -31,12 +30,7 @@ public class ShortenUrlService implements IShortenUrlService{
         this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    @Override
-    public Optional<UrlEntity> shortUrl(UrlRequest urlRequest) throws UrlNotFoundException{
-
-        if(Objects.isNull(urlRequest) || StringUtils.isEmpty(urlRequest.getUrl())){
-            throw new UrlNotFoundException("Url request is missing or empty");
-        }
+    public Optional<UrlEntity> shortUrl(UrlRequest urlRequest) {
 
         String encodedUrl = encodeUrl(urlRequest.getUrl());
 
@@ -47,6 +41,8 @@ public class ShortenUrlService implements IShortenUrlService{
                 .completeShortUrl("http://localhost:8080/api/v1/url/redirect/" + encodedUrl)
                 .originalUrl(urlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
+                //TODO: Logic to set expiration time
+                .expirationDate(LocalDateTime.now().plusSeconds(TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS)))
                 .isDeleted(false)
                 .build();
 
@@ -62,12 +58,11 @@ public class ShortenUrlService implements IShortenUrlService{
         return encodedUrl;
     }
 
-    public UrlEntity getEncodedUrl(String url){
-        List<UrlEntity> urlList = urlRepository.findByShortUrl(url);
-        return  urlList.get(0);
+    public Optional<UrlEntity> getEncodedUrl(String url){
+        return  urlRepository.findByShortUrl(url).stream().findFirst();
     }
 
-    public Optional<UrlEntity> save(UrlEntity urlEntity){
+    private Optional<UrlEntity> save(UrlEntity urlEntity){
         return Optional.ofNullable(urlRepository.save(urlEntity));
     }
 

@@ -32,7 +32,6 @@ public class ShortenUrlController {
 
     private final ShortenUrlService shortenUrlService;
 
-    @Autowired
     public ShortenUrlController(final ShortenUrlService shortenUrlService){
         this.shortenUrlService = shortenUrlService;
     }
@@ -60,27 +59,27 @@ public class ShortenUrlController {
     }
 
     @GetMapping("/redirect/{shortLink}")
-    public ResponseEntity<UrlResponse> redirectUrl(@PathVariable String shortLink, HttpServletResponse response) throws IOException {
+    public ResponseEntity<UrlResponse> redirectUrl(@PathVariable String shortLink, HttpServletResponse response) throws UrlNotFoundException, IOException {
 
         HttpHeaders headers = new HttpHeaders();
 
-        //TODO: Handle empty path variable
         if(StringUtils.isEmpty(shortLink)){
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).build();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
         }
 
-        UrlEntity url = shortenUrlService.getEncodedUrl(shortLink);
+        Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortLink);
 
-        //TODO: Handle url is not in database
-        if(url == null){
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).build();
+        if(optionalUrl.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found");
         }
 
-        //TODO: Handle url is has expired
-//        if(url.getExpirationDate().isBefore(LocalDateTime.now())){
-//            ResponseEntity.status(HttpStatus.BAD_REQUEST).headers(headers).build();
-//        }
+        UrlEntity url = optionalUrl.get();
 
+        if(url.getExpirationDate().isBefore(LocalDateTime.now())){
+            throw new ResponseStatusException(HttpStatus.GONE, "Url has expired");
+        }
+
+        //TODO: Handle IOException
         response.sendRedirect(url.getOriginalUrl());
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
