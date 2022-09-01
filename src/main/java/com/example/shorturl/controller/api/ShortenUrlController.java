@@ -76,7 +76,7 @@ public class ShortenUrlController {
         UrlEntity url = optionalUrl.get();
 
         if(url.getExpirationDate().isBefore(LocalDateTime.now())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Url has expired");
+            throw new ResponseStatusException(HttpStatus.GONE, "Url has expired");
         }
 
         //TODO: Handle IOException
