@@ -44,6 +44,7 @@ public class ShortenUrlService implements IShortenUrlService{
                 //TODO: Logic to set expiration time
                 .expirationDate(LocalDateTime.now().plusSeconds(TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS)))
                 .isDeleted(false)
+                .isExpired(false)
                 .build();
 
         return save(urlEntity);
@@ -59,7 +60,12 @@ public class ShortenUrlService implements IShortenUrlService{
     }
 
     public Optional<UrlEntity> getEncodedUrl(String url){
-        return  urlRepository.findByShortUrl(url).stream().findFirst();
+        Optional<UrlEntity> optionalUrl = urlRepository.findByShortUrl(url).stream().findFirst();
+
+        if(optionalUrl.isPresent())
+            optionalUrl.get().checkIfHasExpired();
+
+        return optionalUrl;
     }
 
     private Optional<UrlEntity> save(UrlEntity urlEntity){
@@ -67,7 +73,12 @@ public class ShortenUrlService implements IShortenUrlService{
     }
 
     public Optional<UrlEntity> findById(Integer id){
-        return urlRepository.findById(id);
+        Optional<UrlEntity> optionalUrl = urlRepository.findById(id);
+
+        if(optionalUrl.isPresent())
+            optionalUrl.get().checkIfHasExpired();
+
+        return optionalUrl;
     }
 
     public void softDeleteById(Integer id){
@@ -87,9 +98,16 @@ public class ShortenUrlService implements IShortenUrlService{
     }
 
     public List<UrlEntity> findAll(){
-        return urlRepository.findAll().stream()
-                            .filter(url -> !url.getIsDeleted())
-                            .collect(Collectors.toList());
+
+        List<UrlEntity> urlList = urlRepository.findAll();
+
+        urlList.stream()
+                .filter(url -> !url.getIsExpired())
+                .forEach(UrlEntity::checkIfHasExpired);
+
+        return urlList.stream()
+                .filter(url -> !url.getIsDeleted())
+                .collect(Collectors.toList());
     }
 
 }

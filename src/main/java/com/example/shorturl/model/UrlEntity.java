@@ -30,4 +30,11 @@ public class UrlEntity {
     private LocalDateTime creationDate;
     private LocalDateTime expirationDate;
     private Boolean isDeleted;
+    private Boolean isExpired;
+
+    public void checkIfHasExpired(){
+        if(this.expirationDate.isBefore(LocalDateTime.now()))
+            this.isExpired = true;
+    }
+
 }
