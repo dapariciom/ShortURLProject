@@ -6,7 +6,6 @@ import com.example.shorturl.model.UrlRequest;
 import com.example.shorturl.model.UrlResponse;
 import com.example.shorturl.utils.UrlNotFoundException;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,15 +37,12 @@ public class ShortenUrlController {
     @PostMapping
     public ResponseEntity<UrlResponse> shortUrl(@RequestBody UrlRequest urlRequest) throws UrlNotFoundException {
 
-        if(Objects.isNull(urlRequest) || StringUtils.isEmpty(urlRequest.getUrl())){
+        if(Objects.isNull(urlRequest) || StringUtils.isEmpty(urlRequest.getUrl()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
-        }
 
         Optional<UrlEntity> optionalUrl = shortenUrlService.shortUrl(urlRequest);
 
-        if(optionalUrl.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is missing");
-        }
+        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is missing"));
 
         return new ResponseEntity<>(
                 UrlResponse.builder()
@@ -63,21 +58,18 @@ public class ShortenUrlController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        if(StringUtils.isEmpty(shortLink)){
+        if(StringUtils.isEmpty(shortLink))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
-        }
 
         Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortLink);
 
-        if(optionalUrl.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found");
-        }
+        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found"));
 
-        UrlEntity url = optionalUrl.get();
+        if(url.getIsDeleted())
+            throw new ResponseStatusException(HttpStatus.GONE, "Url has been deleted");
 
-        if(url.getExpirationDate().isBefore(LocalDateTime.now())){
+        if(url.getIsExpired())
             throw new ResponseStatusException(HttpStatus.GONE, "Url has expired");
-        }
 
         //TODO: Handle IOException
         response.sendRedirect(url.getOriginalUrl());
@@ -86,13 +78,15 @@ public class ShortenUrlController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<UrlEntity>> findById(@PathVariable Integer id){
+    public ResponseEntity<UrlEntity> findById(@PathVariable Integer id) throws UrlNotFoundException {
 
-        Optional<UrlEntity> urlList = shortenUrlService.findById(id);
+        Optional<UrlEntity> optionalUrl = shortenUrlService.findById(id);
+
+        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found"));
 
         HttpHeaders headers = new HttpHeaders();
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(urlList);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(url);
     }
 
     @DeleteMapping("/{id}")
@@ -102,7 +96,7 @@ public class ShortenUrlController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).headers(headers).build();
     }
 
     @DeleteMapping
@@ -112,7 +106,7 @@ public class ShortenUrlController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).headers(headers).build();
     }
 
     @GetMapping
