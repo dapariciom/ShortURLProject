@@ -20,7 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,8 +42,7 @@ public class ShortenUrlController {
 
         Optional<UrlEntity> optionalUrl = shortenUrlService.shortUrl(urlRequest);
 
-        if(optionalUrl.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is missing");
+        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is missing"));
 
         return new ResponseEntity<>(
                 UrlResponse.builder()
@@ -65,15 +63,12 @@ public class ShortenUrlController {
 
         Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortLink);
 
-        if(optionalUrl.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found");
-
-        UrlEntity url = optionalUrl.get();
+        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found"));
 
         if(url.getIsDeleted())
             throw new ResponseStatusException(HttpStatus.GONE, "Url has been deleted");
 
-        if(url.getExpirationDate().isBefore(LocalDateTime.now()))
+        if(url.getIsExpired())
             throw new ResponseStatusException(HttpStatus.GONE, "Url has expired");
 
         //TODO: Handle IOException
@@ -87,10 +82,7 @@ public class ShortenUrlController {
 
         Optional<UrlEntity> optionalUrl = shortenUrlService.findById(id);
 
-        if(optionalUrl.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found");
-
-        UrlEntity url = optionalUrl.get();
+        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found"));
 
         HttpHeaders headers = new HttpHeaders();
 
