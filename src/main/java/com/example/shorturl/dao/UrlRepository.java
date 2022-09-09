@@ -1,6 +1,6 @@
 package com.example.shorturl.dao;
 
-import com.example.shorturl.model.UrlEntity;
+import com.example.shorturl.model.url.UrlEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,6 +1,6 @@
 package com.example.shorturl.service.sequence;
 
-import com.example.shorturl.model.DbSequence;
+import com.example.shorturl.model.url.DbSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;

@@ -1,9 +1,9 @@
 package com.example.shorturl.controller.api;
 
-import com.example.shorturl.service.ShortenUrlService;
-import com.example.shorturl.model.UrlEntity;
-import com.example.shorturl.model.UrlRequest;
-import com.example.shorturl.model.UrlResponse;
+import com.example.shorturl.model.url.UrlEntity;
+import com.example.shorturl.model.url.UrlRequest;
+import com.example.shorturl.model.url.UrlResponse;
+import com.example.shorturl.service.url.ShortenUrlService;
 import com.example.shorturl.utils.UrlNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -26,11 +26,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/url")
-public class ShortenUrlController {
+public class ShortenUrlControllerV1 {
 
     private final ShortenUrlService shortenUrlService;
 
-    public ShortenUrlController(final ShortenUrlService shortenUrlService){
+    public ShortenUrlControllerV1(final ShortenUrlService shortenUrlService){
         this.shortenUrlService = shortenUrlService;
     }
 

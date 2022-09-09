@@ -1,7 +1,7 @@
-package com.example.shorturl.service;
+package com.example.shorturl.service.url;
 
-import com.example.shorturl.model.UrlEntity;
-import com.example.shorturl.model.UrlRequest;
+import com.example.shorturl.model.url.UrlEntity;
+import com.example.shorturl.model.url.UrlRequest;
 
 import java.util.List;
 import java.util.Optional;

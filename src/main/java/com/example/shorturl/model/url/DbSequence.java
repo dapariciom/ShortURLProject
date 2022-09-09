@@ -1,4 +1,4 @@
-package com.example.shorturl.model;
+package com.example.shorturl.model.url;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

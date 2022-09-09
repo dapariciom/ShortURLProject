@@ -1,8 +1,8 @@
-package com.example.shorturl.service;
+package com.example.shorturl.service.url;
 
 import com.example.shorturl.dao.UrlRepository;
-import com.example.shorturl.model.UrlEntity;
-import com.example.shorturl.model.UrlRequest;
+import com.example.shorturl.model.url.UrlEntity;
+import com.example.shorturl.model.url.UrlRequest;
 import com.example.shorturl.service.sequence.SequenceGeneratorService;
 import com.google.common.hash.Hashing;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.example.shorturl.model.UrlEntity.SEQUENCE_NAME;
+import static com.example.shorturl.model.url.UrlEntity.SEQUENCE_NAME;
 
 @Service
-public class ShortenUrlService implements IShortenUrlService{
+public class ShortenUrlService implements IShortenUrlService {
 
     long EXPIRATION_TIME = 20;
 
