@@ -41,7 +41,6 @@ public class ShortenUrlService implements IShortenUrlService {
                 .completeShortUrl("http://localhost:8080/api/v1/url/redirect/" + encodedUrl)
                 .originalUrl(urlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
-                //TODO: Logic to set expiration time
                 .expirationDate(LocalDateTime.now().plusSeconds(TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS)))
                 .isDeleted(false)
                 .isExpired(false)

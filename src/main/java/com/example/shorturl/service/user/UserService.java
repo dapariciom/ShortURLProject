@@ -3,7 +3,10 @@ package com.example.shorturl.service.user;
 import com.example.shorturl.dao.UserRepository;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
+import com.example.shorturl.utils.exceptions.UserException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -17,9 +20,18 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public Optional<UserEntity> signUp(UserRequest userRequest){
+    public UserEntity signUp(UserRequest userRequest) throws UserException {
 
-        //TODO: Not duplicates of username and email
+        Optional<UserEntity> optionalUrl = findByUserName(userRequest.getUserName());
+
+        if(optionalUrl.isPresent())
+            throw new ResponseStatusException(HttpStatus.GONE, "user name already used");
+
+        optionalUrl = findByEmail(userRequest.getEmail());
+
+        if(optionalUrl.isPresent())
+            throw new ResponseStatusException(HttpStatus.GONE, "email already used");
+
         UserEntity userEntity = UserEntity.builder()
                 .userName(userRequest.getUserName())
                 //TODO: Encode password
@@ -33,15 +45,15 @@ public class UserService implements IUserService{
         return save(userEntity);
     }
 
-    private Optional<UserEntity> save(UserEntity userEntity){
-        return Optional.ofNullable(userRepository.save(userEntity));
+    private UserEntity save(UserEntity userEntity){
+        return userRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> findByUserName(String userName){
+    private Optional<UserEntity> findByUserName(String userName){
         return userRepository.findByUserName(userName);
     };
 
-    public Optional<UserEntity> findByEmail(String email){
+    private Optional<UserEntity> findByEmail(String email){
         return userRepository.findByEmail(email);
     };
 

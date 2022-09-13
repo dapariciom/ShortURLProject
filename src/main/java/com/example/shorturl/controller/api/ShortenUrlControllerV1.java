@@ -4,7 +4,7 @@ import com.example.shorturl.model.url.UrlEntity;
 import com.example.shorturl.model.url.UrlRequest;
 import com.example.shorturl.model.url.UrlResponse;
 import com.example.shorturl.service.url.ShortenUrlService;
-import com.example.shorturl.utils.UrlNotFoundException;
+import com.example.shorturl.utils.exceptions.UrlNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -12,7 +14,7 @@ import lombok.Setter;
 public class UserRequest {
 
     private String userName;
-    //TODO: Email validation
+    @Email
     private String email;
     private String firstName;
     private String lastName;

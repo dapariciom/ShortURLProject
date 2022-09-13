@@ -7,15 +7,15 @@ spring:
   datasource:
     username: root
     password: admin
-    url: jdbc:mysql://localhost:3306/shortenUrl?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/shortenUrl?serverTimezone=UTC&createDatabaseIfNotExist=true
     driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: always
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    generate-ddl: true
-    show-sql: true
     hibernate:
       ddl-auto: update
+  #sql:
+    #init:
+      #mode: always
 server:
   error:
     include-message: always
