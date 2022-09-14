@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.Objects;
 
 @RestController
@@ -26,7 +27,7 @@ public class LogInController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponse> signUp(@RequestBody UserRequest userRequest) throws UserException {
+    public ResponseEntity<UserResponse> signUp(@Valid @RequestBody UserRequest userRequest) throws UserException {
 
         if(Objects.isNull(userRequest))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User request is missing or empty");
