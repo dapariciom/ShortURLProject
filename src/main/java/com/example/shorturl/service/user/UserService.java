@@ -1,6 +1,8 @@
 package com.example.shorturl.service.user;
 
+import com.example.shorturl.dao.RoleRepository;
 import com.example.shorturl.dao.UserRepository;
+import com.example.shorturl.model.roles.RoleEntity;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
 import com.example.shorturl.utils.exceptions.UserException;
@@ -14,20 +16,22 @@ import java.util.Optional;
 public class UserService implements IUserService{
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(final UserRepository userRepository){
+    public UserService(final UserRepository userRepository, final RoleRepository roleRepository){
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public UserEntity signUp(UserRequest userRequest) throws UserException {
 
-        Optional<UserEntity> optionalUrl = findByUserName(userRequest.getUserName());
+        Optional<UserEntity> optionalUrl = userRepository.findByUserName(userRequest.getUserName());
 
         if(optionalUrl.isPresent())
             throw new ResponseStatusException(HttpStatus.GONE, "user name already used");
 
-        optionalUrl = findByEmail(userRequest.getEmail());
+        optionalUrl = userRepository.findByEmail(userRequest.getEmail());
 
         if(optionalUrl.isPresent())
             throw new ResponseStatusException(HttpStatus.GONE, "email already used");
@@ -36,25 +40,30 @@ public class UserService implements IUserService{
                 .userName(userRequest.getUserName())
                 //TODO: Encode password
                 .password(userRequest.getPassword())
-                .roles(userRequest.getRoles())
                 .email(userRequest.getEmail())
                 .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
+                .roles(userRequest.getRoles())
                 .build();
 
-        return save(userEntity);
-    }
+        Optional<RoleEntity> optionalRole = roleRepository.findByRoleName("ROLE_USER");
 
-    private UserEntity save(UserEntity userEntity){
+        RoleEntity role = optionalRole.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Role does not exists"));
+
+        userEntity.addRole(role);
+
         return userRepository.save(userEntity);
     }
 
-    private Optional<UserEntity> findByUserName(String userName){
-        return userRepository.findByUserName(userName);
-    };
+    public Optional<UserEntity> findUserById(Integer id){
+        return userRepository.findById(id);
+    }
+    public UserEntity saveUser(UserEntity user){
+        return userRepository.save(user);
+    }
 
-    private Optional<UserEntity> findByEmail(String email){
-        return userRepository.findByEmail(email);
-    };
+    public Optional<RoleEntity> findRoleById(Integer id){
+        return roleRepository.findById(id);
+    }
 
 }

@@ -1,46 +1,48 @@
 package com.example.shorturl.security;
 
+import com.example.shorturl.model.roles.RoleEntity;
 import com.example.shorturl.model.user.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MyUserDetails implements UserDetails {
 
-    private String userName;
-    private String password;
-    private List<GrantedAuthority> authorities;
+    private UserEntity user;
+
 
     public MyUserDetails(UserEntity user){
-        this.userName = user.getUserName();
-        this.password = user.getPassword();
-        this.authorities = Arrays.stream(user.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        this.user = user;
     }
 
     public MyUserDetails(){
-
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<RoleEntity> roles = user.getRoles();
+
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        roles.forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+        });
+
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userName;
+        return user.getUserName();
     }
 
     @Override
