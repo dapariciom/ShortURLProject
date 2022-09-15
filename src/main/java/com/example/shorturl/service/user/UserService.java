@@ -26,16 +26,6 @@ public class UserService implements IUserService{
     @Override
     public UserEntity signUp(UserRequest userRequest) throws UserException {
 
-        Optional<UserEntity> optionalUrl = userRepository.findByUserName(userRequest.getUserName());
-
-        if(optionalUrl.isPresent())
-            throw new ResponseStatusException(HttpStatus.GONE, "user name already used");
-
-        optionalUrl = userRepository.findByEmail(userRequest.getEmail());
-
-        if(optionalUrl.isPresent())
-            throw new ResponseStatusException(HttpStatus.GONE, "email already used");
-
         UserEntity userEntity = UserEntity.builder()
                 .userName(userRequest.getUserName())
                 //TODO: Encode password
@@ -55,15 +45,12 @@ public class UserService implements IUserService{
         return userRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> findUserById(Integer id){
-        return userRepository.findById(id);
-    }
-    public UserEntity saveUser(UserEntity user){
-        return userRepository.save(user);
+    public Optional<UserEntity> findUserByUserName(String userName){
+        return userRepository.findByUserName(userName);
     }
 
-    public Optional<RoleEntity> findRoleById(Integer id){
-        return roleRepository.findById(id);
+    public Optional<UserEntity> findUserByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
 }

@@ -58,8 +58,8 @@ public class ShortenUrlService implements IShortenUrlService {
         return encodedUrl;
     }
 
-    public Optional<UrlEntity> getEncodedUrl(String url){
-        Optional<UrlEntity> optionalUrl = urlRepository.findByShortUrl(url).stream().findFirst();
+    public Optional<UrlEntity> getEncodedUrl(String shortUrl){
+        Optional<UrlEntity> optionalUrl = urlRepository.findByShortUrl(shortUrl);
 
         if(optionalUrl.isPresent())
             optionalUrl.get().checkIfHasExpired();
@@ -71,7 +71,7 @@ public class ShortenUrlService implements IShortenUrlService {
         return Optional.ofNullable(urlRepository.save(urlEntity));
     }
 
-    public Optional<UrlEntity> findById(Integer id){
+    public Optional<UrlEntity> findById(Long id){
         Optional<UrlEntity> optionalUrl = urlRepository.findById(id);
 
         if(optionalUrl.isPresent())
@@ -80,7 +80,7 @@ public class ShortenUrlService implements IShortenUrlService {
         return optionalUrl;
     }
 
-    public void softDeleteById(Integer id){
+    public void softDeleteById(Long id){
         Optional<UrlEntity> optionalUrl = findById(id);
         if(optionalUrl.isPresent()){
             UrlEntity url = optionalUrl.get();

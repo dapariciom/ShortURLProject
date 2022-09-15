@@ -53,15 +53,15 @@ public class ShortenUrlControllerV1 {
                         .build(), HttpStatus.OK);
     }
 
-    @GetMapping("/redirect/{shortLink}")
-    public ResponseEntity<UrlResponse> redirectUrl(@PathVariable String shortLink, HttpServletResponse response) throws UrlNotFoundException, IOException {
+    @GetMapping("/redirect/{shortUrl}")
+    public ResponseEntity<UrlResponse> redirectUrl(@PathVariable String shortUrl, HttpServletResponse response) throws UrlNotFoundException, IOException {
 
         HttpHeaders headers = new HttpHeaders();
 
-        if(StringUtils.isEmpty(shortLink))
+        if(StringUtils.isEmpty(shortUrl))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
 
-        Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortLink);
+        Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortUrl);
 
         UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found"));
 
@@ -78,7 +78,7 @@ public class ShortenUrlControllerV1 {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UrlEntity> findById(@PathVariable Integer id) throws UrlNotFoundException {
+    public ResponseEntity<UrlEntity> findById(@PathVariable Long id) throws UrlNotFoundException {
 
         Optional<UrlEntity> optionalUrl = shortenUrlService.findById(id);
 
@@ -90,7 +90,7 @@ public class ShortenUrlControllerV1 {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
 
         shortenUrlService.softDeleteById(id);
 
