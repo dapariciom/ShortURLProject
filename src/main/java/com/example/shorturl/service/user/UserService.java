@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,12 +46,8 @@ public class UserService implements IUserService{
         return userRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> findUserByUserName(String userName){
-        return userRepository.findByUserName(userName);
-    }
-
-    public Optional<UserEntity> findUserByEmail(String email){
-        return userRepository.findByEmail(email);
+    public List<UserEntity> findUserByUserNameOrEmail(String userName, String email){
+        return userRepository.findByUserNameOrEmail(userName, email);
     }
 
 }
