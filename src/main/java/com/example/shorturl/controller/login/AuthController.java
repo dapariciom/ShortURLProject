@@ -36,7 +36,7 @@ public class AuthController {
         Optional<UserEntity> userObtained = userService.findUserByUserNameOrEmail(userRequest.getUserName(), userRequest.getEmail());
 
         if(userObtained.isPresent())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or email already exit");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or email already exists");
 
         UserEntity user = userService.signUp(userRequest);
 
