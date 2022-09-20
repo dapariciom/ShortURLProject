@@ -45,8 +45,8 @@ public class UserService implements IUserService{
         return userRepository.save(userEntity);
     }
 
-    public Optional<UserEntity> findUserByUserNameOrEmail(String userName, String email){
-        return userRepository.findByUserNameOrEmail(userName, email).stream().findFirst();
+    public Optional<UserEntity> findFirstUserByUserNameOrEmail(String userName, String email){
+        return userRepository.findFirstByUserNameOrEmail(userName, email);
     }
 
 }

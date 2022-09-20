@@ -18,13 +18,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByUserName(String userName);
 
     /**
-     * This method is used to look for the UserEntities with a specific
-     * userName or email from the database
+     * This method is used to look for the first UserEntity with a
+     * specific userName or email from the database
      *
      * @param userName This is the userName to look for
      * @param email This is the email to look for
-     * @return List<UserEntity> This returns the found user entities
+     * @return Optional<UserEntity> This returns the first userEntity found
      */
-    List<UserEntity> findByUserNameOrEmail(String userName, String email);
+    Optional<UserEntity> findFirstByUserNameOrEmail(String userName, String email);
 
 }
