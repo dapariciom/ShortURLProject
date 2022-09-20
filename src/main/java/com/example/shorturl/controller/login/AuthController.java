@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/auth")
@@ -33,15 +33,10 @@ public class AuthController {
         if(Objects.isNull(userRequest))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User request is missing or empty");
 
-        List<UserEntity> userListObtained = userService.findUserByUserNameOrEmail(userRequest.getUserName(), userRequest.getEmail());
+        Optional<UserEntity> userObtained = userService.findUserByUserNameOrEmail(userRequest.getUserName(), userRequest.getEmail());
 
-        if(userListObtained.size() > 0)
-            userListObtained.stream().forEach( user -> {
-                if(user.getUserName().equals(userRequest.getUserName()))
-                    throw new ResponseStatusException(HttpStatus.GONE, "user name already used");
-                if(user.getEmail().equals(userRequest.getEmail()))
-                    throw new ResponseStatusException(HttpStatus.GONE, "email already used");
-            });
+        if(userObtained.isPresent())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username or email already exit");
 
         UserEntity user = userService.signUp(userRequest);
 
