@@ -1,8 +1,8 @@
-package com.example.shorturl.service;
+package com.example.shorturl.service.url;
 
 import com.example.shorturl.dao.UrlRepository;
-import com.example.shorturl.model.UrlEntity;
-import com.example.shorturl.model.UrlRequest;
+import com.example.shorturl.model.url.UrlEntity;
+import com.example.shorturl.model.url.UrlRequest;
 import com.example.shorturl.service.sequence.SequenceGeneratorService;
 import com.google.common.hash.Hashing;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.example.shorturl.model.UrlEntity.SEQUENCE_NAME;
+import static com.example.shorturl.model.url.UrlEntity.SEQUENCE_NAME;
 
 @Service
-public class ShortenUrlService implements IShortenUrlService{
+public class ShortenUrlService implements IShortenUrlService {
 
     long EXPIRATION_TIME = 20;
 
@@ -41,7 +41,6 @@ public class ShortenUrlService implements IShortenUrlService{
                 .completeShortUrl("http://localhost:8080/api/v1/url/redirect/" + encodedUrl)
                 .originalUrl(urlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
-                //TODO: Logic to set expiration time
                 .expirationDate(LocalDateTime.now().plusSeconds(TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS)))
                 .isDeleted(false)
                 .isExpired(false)
@@ -59,8 +58,8 @@ public class ShortenUrlService implements IShortenUrlService{
         return encodedUrl;
     }
 
-    public Optional<UrlEntity> getEncodedUrl(String url){
-        Optional<UrlEntity> optionalUrl = urlRepository.findByShortUrl(url).stream().findFirst();
+    public Optional<UrlEntity> getEncodedUrl(String shortUrl){
+        Optional<UrlEntity> optionalUrl = urlRepository.findByShortUrl(shortUrl);
 
         if(optionalUrl.isPresent())
             optionalUrl.get().checkIfHasExpired();
@@ -72,7 +71,7 @@ public class ShortenUrlService implements IShortenUrlService{
         return Optional.ofNullable(urlRepository.save(urlEntity));
     }
 
-    public Optional<UrlEntity> findById(Integer id){
+    public Optional<UrlEntity> findById(Long id){
         Optional<UrlEntity> optionalUrl = urlRepository.findById(id);
 
         if(optionalUrl.isPresent())
@@ -81,7 +80,7 @@ public class ShortenUrlService implements IShortenUrlService{
         return optionalUrl;
     }
 
-    public void softDeleteById(Integer id){
+    public void softDeleteById(Long id){
         Optional<UrlEntity> optionalUrl = findById(id);
         if(optionalUrl.isPresent()){
             UrlEntity url = optionalUrl.get();

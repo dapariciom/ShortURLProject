@@ -1,7 +1,7 @@
-package com.example.shorturl.service;
+package com.example.shorturl.service.url;
 
-import com.example.shorturl.model.UrlEntity;
-import com.example.shorturl.model.UrlRequest;
+import com.example.shorturl.model.url.UrlEntity;
+import com.example.shorturl.model.url.UrlRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +33,7 @@ public interface IShortenUrlService {
      * @param id This is the unique identifier to look for
      * @return Optional<UrlEntity> This returns the found entity
      */
-    Optional<UrlEntity> findById(Integer id);
+    Optional<UrlEntity> findById(Long id);
 
     /**
      * This method is used to find all the UrlEntity's that have not been soft deleted. This means
@@ -49,7 +49,7 @@ public interface IShortenUrlService {
      *
      * @param id This is the unique identifier to delete
      */
-    void softDeleteById(Integer id);
+    void softDeleteById(Long id);
 
     /**
      * This method makes a soft delete to all the found UrlEntity's. This means

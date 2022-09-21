@@ -1,10 +1,10 @@
 package com.example.shorturl.controller.api;
 
-import com.example.shorturl.service.ShortenUrlService;
-import com.example.shorturl.model.UrlEntity;
-import com.example.shorturl.model.UrlRequest;
-import com.example.shorturl.model.UrlResponse;
-import com.example.shorturl.utils.UrlNotFoundException;
+import com.example.shorturl.model.url.UrlEntity;
+import com.example.shorturl.model.url.UrlRequest;
+import com.example.shorturl.model.url.UrlResponse;
+import com.example.shorturl.service.url.ShortenUrlService;
+import com.example.shorturl.utils.exceptions.UrlNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,11 +26,11 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/url")
-public class ShortenUrlController {
+public class ShortenUrlControllerV1 {
 
     private final ShortenUrlService shortenUrlService;
 
-    public ShortenUrlController(final ShortenUrlService shortenUrlService){
+    public ShortenUrlControllerV1(final ShortenUrlService shortenUrlService){
         this.shortenUrlService = shortenUrlService;
     }
 
@@ -53,15 +53,15 @@ public class ShortenUrlController {
                         .build(), HttpStatus.OK);
     }
 
-    @GetMapping("/redirect/{shortLink}")
-    public ResponseEntity<UrlResponse> redirectUrl(@PathVariable String shortLink, HttpServletResponse response) throws UrlNotFoundException, IOException {
+    @GetMapping("/redirect/{shortUrl}")
+    public ResponseEntity<UrlResponse> redirectUrl(@PathVariable String shortUrl, HttpServletResponse response) throws UrlNotFoundException, IOException {
 
         HttpHeaders headers = new HttpHeaders();
 
-        if(StringUtils.isEmpty(shortLink))
+        if(StringUtils.isEmpty(shortUrl))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
 
-        Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortLink);
+        Optional<UrlEntity> optionalUrl = shortenUrlService.getEncodedUrl(shortUrl);
 
         UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found"));
 
@@ -78,7 +78,7 @@ public class ShortenUrlController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UrlEntity> findById(@PathVariable Integer id) throws UrlNotFoundException {
+    public ResponseEntity<UrlEntity> findById(@PathVariable Long id) throws UrlNotFoundException {
 
         Optional<UrlEntity> optionalUrl = shortenUrlService.findById(id);
 
@@ -90,7 +90,7 @@ public class ShortenUrlController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
 
         shortenUrlService.softDeleteById(id);
 
