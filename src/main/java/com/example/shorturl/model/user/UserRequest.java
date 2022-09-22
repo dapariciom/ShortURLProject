@@ -1,6 +1,5 @@
 package com.example.shorturl.model.user;
 
-import com.example.shorturl.model.roles.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -9,8 +8,6 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +25,6 @@ public class UserRequest {
     private String firstName;
 
     private String lastName;
-
-    private List<RoleEntity> roles = new ArrayList<>();
 
     @NotNull
     private String password;

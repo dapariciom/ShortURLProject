@@ -26,14 +26,14 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        return http.csrf().disable()
+        http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/v1/**").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/user").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/admin").hasRole("ADMIN")
-                .and().httpBasic()
-                .and().build();
+                .and().httpBasic();
+
+        return  http.build();
     }
 
     @Bean

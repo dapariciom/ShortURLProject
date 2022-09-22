@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class MyUserDetails implements UserDetails {
 
@@ -24,12 +25,12 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<RoleEntity> roles = user.getRoles();
+        Set<RoleEntity> roles = user.getRoles();
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
         roles.forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
         });
 
         return authorities;
