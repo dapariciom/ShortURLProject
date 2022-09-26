@@ -82,4 +82,44 @@ public class UserServiceTest {
 
     }
 
+    @Test
+    void test_find_user_by_name(){
+
+        String findName = "admin";
+
+        UserEntity userToReturn = UserEntity.builder()
+                .id(1L)
+                .userName("admin")
+                .password("admin")
+                .email("admin@outlook.com")
+                .firstName("admin")
+                .lastName("admin")
+                .roles(ImmutableSet.of(RoleEntity.builder()
+                        .id(1L)
+                        .name("ROLE_ADMIN")
+                        .build()))
+                .build();
+
+        Mockito.when(this.userRepository.findByUserName(findName)).thenReturn(Optional.of(userToReturn));
+
+        UserEntity userReceived = userService.findByUserName(findName).get();
+
+        UserEntity userExpected = UserEntity.builder()
+                .id(1L)
+                .userName("admin")
+                .password("admin")
+                .email("admin@outlook.com")
+                .firstName("admin")
+                .lastName("admin")
+                .roles(ImmutableSet.of(RoleEntity.builder()
+                        .id(1L)
+                        .name("ROLE_ADMIN")
+                        .build()))
+                .build();
+
+
+        assertEquals(userExpected, userReceived);
+
+    }
+
 }
