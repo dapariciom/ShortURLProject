@@ -3,122 +3,58 @@ package com.example.shorturl.service.user;
 import com.example.shorturl.dao.RoleRepository;
 import com.example.shorturl.dao.UserRepository;
 import com.example.shorturl.model.roles.RoleEntity;
-import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
-import com.google.common.collect.ImmutableSet;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
+    @InjectMocks
     private UserService userService;
 
+    @Mock
     private UserRepository userRepository;
+    @Mock
     private RoleRepository roleRepository;
 
-    @BeforeEach
-    void setup(){
-
-        this.userRepository = mock(UserRepository.class);
-        this.roleRepository = mock(RoleRepository.class);
-
-        this.userService = new UserService(userRepository, roleRepository);
-
-    }
 
     @Test
-    void test_signup_new_user(){
+    void testSignUpNewUser(){
 
         UserRequest userRequest = new UserRequest("dan", "dan@outlook.com", "dan", "dan", "dan");
 
-        RoleEntity roleUser = RoleEntity.builder()
+        RoleEntity roleEntity = RoleEntity.builder()
                 .id(2L)
-                .name("ROLE_USER")
+                .name("USER")
                 .build();
 
-        UserEntity userToSaved = UserEntity.builder()
-                .userName(userRequest.getUserName())
-                .password(userRequest.getPassword())
-                .email(userRequest.getEmail())
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .roles(ImmutableSet.of(roleUser))
-                .build();
+        when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(roleEntity));
 
-        UserEntity userToReturn = UserEntity.builder()
-                .id(1L)
-                .userName(userRequest.getUserName())
-                .password(userRequest.getPassword())
-                .email(userRequest.getEmail())
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .roles(ImmutableSet.of(roleUser))
-                .build();
+        userService.signUp(userRequest);
 
-        Mockito.when(this.roleRepository.findByName("ROLE_USER"))
-                .thenReturn(Optional.of(roleUser));
-
-        Mockito.when(this.userRepository.save(userToSaved)).thenReturn(userToReturn);
-
-        UserEntity userReceived = userService.signUp(userRequest);
-
-        UserEntity userExpected = UserEntity.builder()
-                .id(1L)
-                .userName(userRequest.getUserName())
-                .password(userRequest.getPassword())
-                .email(userRequest.getEmail())
-                .firstName(userRequest.getFirstName())
-                .lastName(userRequest.getLastName())
-                .roles(ImmutableSet.of(roleUser))
-                .build();
-
-        assertEquals(userExpected, userReceived);
+        verify(userRepository, times(1)).save(any());
 
     }
 
     @Test
-    void test_find_user_by_name(){
+    void testFindUserByName(){
 
         String findName = "admin";
 
-        UserEntity userToReturn = UserEntity.builder()
-                .id(1L)
-                .userName("admin")
-                .password("admin")
-                .email("admin@outlook.com")
-                .firstName("admin")
-                .lastName("admin")
-                .roles(ImmutableSet.of(RoleEntity.builder()
-                        .id(1L)
-                        .name("ROLE_ADMIN")
-                        .build()))
-                .build();
+        userService.findByUserName(findName);
 
-        Mockito.when(this.userRepository.findByUserName(findName)).thenReturn(Optional.of(userToReturn));
-
-        UserEntity userReceived = userService.findByUserName(findName).get();
-
-        UserEntity userExpected = UserEntity.builder()
-                .id(1L)
-                .userName("admin")
-                .password("admin")
-                .email("admin@outlook.com")
-                .firstName("admin")
-                .lastName("admin")
-                .roles(ImmutableSet.of(RoleEntity.builder()
-                        .id(1L)
-                        .name("ROLE_ADMIN")
-                        .build()))
-                .build();
-
-
-        assertEquals(userExpected, userReceived);
+        verify(userRepository, times(1)).findByUserName(any());
 
     }
 
