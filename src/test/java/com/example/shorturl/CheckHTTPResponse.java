@@ -20,7 +20,7 @@ public class CheckHTTPResponse {
     @Test
     public void shouldPassIfStringMatches(){
         assertEquals("UP",
-                testRestTemplate.getForObject("http://localhost:" + port + "/",
+                testRestTemplate.getForObject("http://localhost:" + port + "/api/v1/heartbeat",
                         String.class));
     }
 }
