@@ -10,9 +10,11 @@ import com.example.shorturl.service.user.UserService;
 import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -73,19 +76,19 @@ public class AuthControllerTest {
     @Test
     void testSignUpWithNullUser(){
 
-        try{
-            authController.signUp(null);
-        } catch (ResponseStatusException e){
-            assertEquals("User request is missing or empty", e.getReason());
-            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
-        }
+        Executable executable = () -> authController.signUp(null);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, executable);
+
+        assertEquals("User request is missing or empty", exception.getReason());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
 
     }
 
     @Test
     void testSignUpWithRepeatedUserName(){
 
-        UserRequest userRequest = new UserRequest("dan", "dan@outlook.com", "dan", "dan", "dan");
+        UserRequest userRequest = new UserRequest("admin", "dan@outlook.com", "dan", "dan", "dan");
 
         RoleEntity roleEntity = RoleEntity.builder()
                 .id(2L)
@@ -104,12 +107,31 @@ public class AuthControllerTest {
 
         when(userService.findByUserName(userRequest.getUserName())).thenReturn(Optional.of(userToReturn));
 
-        try{
-            authController.signUp(userRequest);
-        } catch (ResponseStatusException e){
-            assertEquals("Username already exists", e.getReason());
-            assertEquals(HttpStatus.BAD_REQUEST, e.getStatus());
-        }
+        Executable executable = () -> authController.signUp(userRequest);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, executable);
+
+        assertEquals("Username already exists", exception.getReason());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
+
+    }
+
+    @Test
+    void testSignUpWithRepeatedEmail(){
+
+        UserRequest userRequest = new UserRequest("dan", "admin@outlook.com", "dan", "dan", "dan");
+
+        when(userService.findByUserName(any())).thenReturn(Optional.empty());
+
+        String errorMessage = "Duplicate entry 'admin@outlook.com' for key 'users.email'";
+
+        when(userService.signUp(any())).thenThrow(new DataIntegrityViolationException(errorMessage));
+
+        Executable executable = () -> authController.signUp(userRequest);
+
+        DataIntegrityViolationException exception = assertThrows(DataIntegrityViolationException.class, executable);
+
+        assertEquals(errorMessage, exception.getMessage());
 
     }
 
