@@ -17,6 +17,6 @@ CREATE TABLE IF NOT EXISTS roles (
 );
 
 CREATE TABLE IF NOT EXISTS user_role (
-    user_id BIGINT NOT NULL REFERENCES users(id),
-    role_name VARCHAR(255) REFERENCES roles(name)
+    user_id  BIGINT NOT NULL REFERENCES users(id),
+    role_id BIGINT REFERENCES roles(id)
 );

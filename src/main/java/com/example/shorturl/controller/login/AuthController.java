@@ -9,6 +9,7 @@ import com.example.shorturl.security.JwtUtil;
 import com.example.shorturl.security.MyUserDetailsService;
 import com.example.shorturl.service.user.UserService;
 import com.example.shorturl.utils.exceptions.UserException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,6 +62,21 @@ public class AuthController {
                 UserResponse.builder()
                         .userName(user.getUserName())
                         .build(), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<UserEntity> getUser(@Valid @RequestBody UserRequest userRequest) throws UserException {
+
+        if(Objects.isNull(userRequest))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User request is missing or empty");
+
+        Optional<UserEntity> optionalUser = userService.findByUserName(userRequest.getUserName());
+
+        UserEntity user = optionalUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
+
+        HttpHeaders headers = new HttpHeaders();
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(user);
     }
 
     @PostMapping("/login")

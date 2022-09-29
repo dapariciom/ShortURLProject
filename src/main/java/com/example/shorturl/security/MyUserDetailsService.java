@@ -1,7 +1,7 @@
 package com.example.shorturl.security;
 
-import com.example.shorturl.dao.UserRepository;
 import com.example.shorturl.model.user.UserEntity;
+import com.example.shorturl.service.user.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,16 +12,16 @@ import java.util.Optional;
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
-    UserRepository userRepository;
+    final UserService userService;
 
-    public MyUserDetailsService(UserRepository userRepository){
-        this.userRepository = userRepository;
+    public MyUserDetailsService(final UserService userService){
+        this.userService = userService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<UserEntity> optionalUser = userRepository.findByUserName(username).stream().findFirst();
+        Optional<UserEntity> optionalUser = userService.findByUserName(username);
 
         UserEntity user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
