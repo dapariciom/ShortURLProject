@@ -1,5 +1,6 @@
 package com.example.shorturl.controller.login;
 
+import com.example.shorturl.model.roles.ERole;
 import com.example.shorturl.model.roles.RoleEntity;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
@@ -51,7 +52,7 @@ public class AuthControllerTest {
 
         RoleEntity roleEntity = RoleEntity.builder()
                 .id(2L)
-                .name("USER")
+                .name(ERole.ROLE_USER)
                 .build();
 
         UserEntity userToReturn = UserEntity.builder()
@@ -92,7 +93,7 @@ public class AuthControllerTest {
 
         RoleEntity roleEntity = RoleEntity.builder()
                 .id(2L)
-                .name("USER")
+                .name(ERole.ROLE_USER)
                 .build();
 
         UserEntity userToReturn = UserEntity.builder()

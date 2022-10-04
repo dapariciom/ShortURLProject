@@ -2,6 +2,7 @@ package com.example.shorturl.service.user;
 
 import com.example.shorturl.dao.RoleRepository;
 import com.example.shorturl.dao.UserRepository;
+import com.example.shorturl.model.roles.ERole;
 import com.example.shorturl.model.roles.RoleEntity;
 import com.example.shorturl.model.user.UserRequest;
 import org.junit.jupiter.api.Test;
@@ -36,10 +37,10 @@ public class UserServiceTest {
 
         RoleEntity roleEntity = RoleEntity.builder()
                 .id(2L)
-                .name("USER")
+                .name(ERole.ROLE_USER)
                 .build();
 
-        when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(roleEntity));
+        when(roleRepository.findByName(ERole.ROLE_USER)).thenReturn(Optional.of(roleEntity));
 
         userService.signUp(userRequest);
 

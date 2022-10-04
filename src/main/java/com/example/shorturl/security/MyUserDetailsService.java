@@ -27,7 +27,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
         UserEntity user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        return new MyUserDetails(user);
+        return MyUserDetails.build(user);
     }
 
 
