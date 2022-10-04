@@ -29,23 +29,23 @@ public class UserServiceTest {
     private RoleRepository roleRepository;
 
 
-    @Test
-    void testSignUpNewUser(){
-
-        UserRequest userRequest = new UserRequest("dan", "dan@outlook.com", "dan", "dan", "dan");
-
-        RoleEntity roleEntity = RoleEntity.builder()
-                .id(2L)
-                .name("USER")
-                .build();
-
-        when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(roleEntity));
-
-        userService.signUp(userRequest);
-
-        verify(userRepository, times(1)).save(any());
-
-    }
+//    @Test
+//    void testSignUpNewUser(){
+//
+//        UserRequest userRequest = new UserRequest("dan", "dan@outlook.com", "dan", "dan", "dan");
+//
+//        RoleEntity roleEntity = RoleEntity.builder()
+//                .id(2L)
+//                .name("USER")
+//                .build();
+//
+//        when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(roleEntity));
+//
+//        userService.signUp(userRequest);
+//
+//        verify(userRepository, times(1)).save(any());
+//
+//    }
 
     @Test
     void testFindUserByName(){

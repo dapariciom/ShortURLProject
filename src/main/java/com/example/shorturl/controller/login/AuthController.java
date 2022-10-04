@@ -5,8 +5,8 @@ import com.example.shorturl.model.auth.AuthenticationResponse;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
 import com.example.shorturl.model.user.UserResponse;
-import com.example.shorturl.security.JwtUtil;
 import com.example.shorturl.security.MyUserDetailsService;
+import com.example.shorturl.security.jwt.JwtUtils;
 import com.example.shorturl.service.user.UserService;
 import com.example.shorturl.utils.exceptions.UserException;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,16 +35,16 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final MyUserDetailsService myUserDetailsService;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtils;
 
     public AuthController(final UserService userService,
                           final AuthenticationManager authenticationManager,
                           final MyUserDetailsService myUserDetailsService,
-                          final JwtUtil jwtUtil){
+                          final JwtUtils jwtUtils){
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.myUserDetailsService = myUserDetailsService;
-        this.jwtUtil = jwtUtil;
+        this.jwtUtils = jwtUtils;
     }
 
     @PostMapping("/signup")
@@ -82,18 +84,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
 
-        try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect userName or password", e);
-        }
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         final UserDetails userDetails = myUserDetailsService
                 .loadUserByUsername(authenticationRequest.getUserName());
 
-        final String jwt = jwtUtil.generateToken(userDetails);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
         return new ResponseEntity<>(
                 AuthenticationResponse.builder()

@@ -1,15 +1,13 @@
 package com.example.shorturl.security;
 
-import com.example.shorturl.model.roles.RoleEntity;
 import com.example.shorturl.model.user.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MyUserDetails implements UserDetails {
 
@@ -25,13 +23,10 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<RoleEntity> roles = user.getRoles();
 
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
-        roles.forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
+        List<GrantedAuthority> authorities = user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                .collect(Collectors.toList());
 
         return authorities;
     }
