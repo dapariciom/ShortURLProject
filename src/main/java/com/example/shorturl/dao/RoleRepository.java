@@ -14,7 +14,7 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
      * This method is used to look for a RoleEntity with a specific
      * roleName from the database
      *
-     * @param roleName This is the role name to look for
+     * @param name This is the role name to look for
      * @return Optional<RoleEntity> This returns the found role entity
      */
     Optional<RoleEntity> findByName(ERole name);
