@@ -5,17 +5,17 @@ import com.example.shorturl.model.auth.AuthenticationResponse;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
 import com.example.shorturl.model.user.UserResponse;
-import com.example.shorturl.security.jwt.JwtUtil;
+import com.example.shorturl.security.MyUserDetails;
 import com.example.shorturl.security.MyUserDetailsService;
+import com.example.shorturl.security.jwt.JwtUtil;
 import com.example.shorturl.service.user.UserService;
 import com.example.shorturl.utils.exceptions.UserException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,40 +64,23 @@ public class AuthController {
                         .build(), HttpStatus.CREATED);
     }
 
-    @PostMapping("/user")
-    public ResponseEntity<UserEntity> getUser(@Valid @RequestBody UserRequest userRequest) throws UserException {
-
-        if(Objects.isNull(userRequest))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User request is missing or empty");
-
-        Optional<UserEntity> optionalUser = userService.findByUserName(userRequest.getUserName());
-
-        UserEntity user = optionalUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
-
-        HttpHeaders headers = new HttpHeaders();
-
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(user);
-    }
-
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
 
-        try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword())
-            );
-        } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect userName or password", e);
-        }
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword()));
 
-        final UserDetails userDetails = myUserDetailsService
-                .loadUserByUsername(authenticationRequest.getUserName());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        final String jwt = jwtUtil.generateToken(userDetails);
+        MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
+
+        String jwt = jwtUtil.generateToken(userDetails);
 
         return new ResponseEntity<>(
                 AuthenticationResponse.builder()
                         .jwt(jwt)
+                        .userName(userDetails.getUsername())
+                        .email(userDetails.getEmail())
                         .build(), HttpStatus.OK);
     }
 
