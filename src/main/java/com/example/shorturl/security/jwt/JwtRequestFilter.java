@@ -1,6 +1,5 @@
-package com.example.shorturl.security.filters;
+package com.example.shorturl.security.jwt;
 
-import com.example.shorturl.security.JwtUtil;
 import com.example.shorturl.security.MyUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

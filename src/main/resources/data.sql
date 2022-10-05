@@ -1,7 +1,7 @@
 INSERT IGNORE INTO users (id, user_name, email, password, first_name, last_name)
-VALUES (1, 'admin', 'admin@outlook.com', 'admin', 'admin', 'admin');
+VALUES (1, 'admin', 'admin@outlook.com', '$2a$10$Qy.DuyzLnSFSyRbMgUYAqOutnrVGOUeHLcSINmAVHHOsQwiOb09CC', 'admin', 'admin');
 INSERT IGNORE INTO users (id, user_name, email, password, first_name, last_name)
-VALUES (2, 'user', 'user@outlook.com', 'user', 'user', 'user');
+VALUES (2, 'user', 'user@outlook.com', '$2a$10$h6aV7lW7Ds8Gy/BZnWPZmOBkCFZMs85Pm5j8LMtLVROD3UlYO24ya', 'user', 'user');
 
 INSERT IGNORE INTO roles (id, name) VALUES (1, 'ROLE_ADMIN');
 INSERT IGNORE INTO roles (id, name) VALUES (2, 'ROLE_USER');

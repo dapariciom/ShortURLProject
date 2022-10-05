@@ -5,7 +5,7 @@ import com.example.shorturl.model.auth.AuthenticationResponse;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
 import com.example.shorturl.model.user.UserResponse;
-import com.example.shorturl.security.JwtUtil;
+import com.example.shorturl.security.jwt.JwtUtil;
 import com.example.shorturl.security.MyUserDetailsService;
 import com.example.shorturl.service.user.UserService;
 import com.example.shorturl.utils.exceptions.UserException;
