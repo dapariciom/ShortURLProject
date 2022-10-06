@@ -1,5 +1,6 @@
 package com.example.shorturl.dao;
 
+import com.example.shorturl.model.roles.ERole;
 import com.example.shorturl.model.roles.RoleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,6 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
      * @param roleName This is the role name to look for
      * @return Optional<RoleEntity> This returns the found role entity
      */
-    Optional<RoleEntity> findByName(String roleName);
+    Optional<RoleEntity> findByName(ERole roleName);
 
 }

@@ -1,10 +1,11 @@
 package com.example.shorturl.controller.login;
 
+import com.example.shorturl.model.roles.ERole;
 import com.example.shorturl.model.roles.RoleEntity;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.model.user.UserRequest;
 import com.example.shorturl.model.user.UserResponse;
-import com.example.shorturl.security.JwtUtil;
+import com.example.shorturl.security.jwt.JwtUtil;
 import com.example.shorturl.security.MyUserDetailsService;
 import com.example.shorturl.service.user.UserService;
 import com.google.common.collect.ImmutableSet;
@@ -51,7 +52,7 @@ public class AuthControllerTest {
 
         RoleEntity roleEntity = RoleEntity.builder()
                 .id(2L)
-                .name("USER")
+                .name(ERole.ROLE_USER)
                 .build();
 
         UserEntity userToReturn = UserEntity.builder()
@@ -92,7 +93,7 @@ public class AuthControllerTest {
 
         RoleEntity roleEntity = RoleEntity.builder()
                 .id(2L)
-                .name("USER")
+                .name(ERole.ROLE_USER)
                 .build();
 
         UserEntity userToReturn = UserEntity.builder()

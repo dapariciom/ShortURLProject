@@ -19,3 +19,6 @@ spring:
 server:
   error:
     include-message: always
+short-url-project:
+  jwtSecret: shortURLProjectSecretKey
+  jwtExpirationMs: 36000000
