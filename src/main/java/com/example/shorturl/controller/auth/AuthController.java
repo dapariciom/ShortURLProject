@@ -1,4 +1,4 @@
-package com.example.shorturl.controller.login;
+package com.example.shorturl.controller.auth;
 
 import com.example.shorturl.model.auth.AuthenticationRequest;
 import com.example.shorturl.model.auth.AuthenticationResponse;
