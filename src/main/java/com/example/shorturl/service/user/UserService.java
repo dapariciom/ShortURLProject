@@ -51,10 +51,11 @@ public class UserService implements IUserService{
 
     public UserEntity adminCreateUser(AdminUserRequest userRequest) {
 
-        Set<RoleEntity> roles = userRequest.getRoles().stream().map(role ->
-                roleRepository.findByName(Enums.getIfPresent(ERole.class, role).orNull())
-                        .orElseThrow(() -> new ERoleNotFoundException("Error: " + role + " not found"))
-        ).collect(Collectors.toSet());
+        Set<RoleEntity> roles = userRequest.getRoles().size() == 0 ? ImmutableSet.of(roleRepository.findByName(ERole.ROLE_USER).get()) :
+                userRequest.getRoles().stream().map(role ->
+                        roleRepository.findByName(Enums.getIfPresent(ERole.class, role).orNull())
+                                .orElseThrow(() -> new ERoleNotFoundException("Error: " + role + " not found"))
+                ).collect(Collectors.toSet());
 
         String password = userRequest.getPassword() != null ? userRequest.getPassword() :
                 generateRandomSpecialCharacters(CUSTOM_PASSWORD_LENGTH);
