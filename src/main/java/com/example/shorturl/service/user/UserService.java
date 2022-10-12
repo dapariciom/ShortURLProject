@@ -69,6 +69,11 @@ public class UserService implements IUserService{
                 .roles(roles)
                 .build();
 
+        Optional<UserEntity> existingUser = findFirstByUserNameOrEmail(userRequest.getUserName(), userRequest.getEmail());
+
+        if(existingUser.isPresent())
+            userEntity.setId(existingUser.get().getId());
+
         UserEntity userSaved = userRepository.save(userEntity);
         userSaved.setPassword(password);
 
@@ -79,6 +84,9 @@ public class UserService implements IUserService{
         return userRepository.findByUserName(userName);
     }
 
+    public Optional<UserEntity> findFirstByUserNameOrEmail(String userName, String email){
+        return userRepository.findFirstByUserNameOrEmail(userName, email);
+    }
 
     private String generateRandomSpecialCharacters(int length) {
         RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder().withinRange('0', 'z')

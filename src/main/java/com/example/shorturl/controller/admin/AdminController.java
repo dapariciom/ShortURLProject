@@ -14,11 +14,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
@@ -32,11 +31,6 @@ public class AdminController {
 
         if(Objects.isNull(userRequest))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User request is missing or empty");
-
-        Optional<UserEntity> userObtained = userService.findByUserName(userRequest.getUserName());
-
-        if(userObtained.isPresent())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
 
         UserEntity user = userService.adminCreateUser(userRequest);
 
