@@ -1,4 +1,4 @@
-package com.example.shorturl.controller.login;
+package com.example.shorturl.controller.auth;
 
 import com.example.shorturl.model.auth.AuthenticationRequest;
 import com.example.shorturl.model.auth.AuthenticationResponse;
@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService userService;

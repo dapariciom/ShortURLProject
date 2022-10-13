@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/v1/url")
+@RequestMapping("/api/v1/url")
 public class ShortenUrlControllerV1 {
 
     private final ShortenUrlService shortenUrlService;

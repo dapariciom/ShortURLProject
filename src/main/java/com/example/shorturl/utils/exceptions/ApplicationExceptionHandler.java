@@ -32,4 +32,12 @@ public class ApplicationExceptionHandler {
         return errorMap;
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ERoleNotFoundException.class)
+    public Map<String, String> handleERoleNotFound(ERoleNotFoundException e){
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error-message", e.getMessage());
+        return errorMap;
+    }
+
 }
