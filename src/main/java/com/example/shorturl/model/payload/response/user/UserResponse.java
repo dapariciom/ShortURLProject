@@ -1,6 +1,7 @@
-package com.example.shorturl.model.url;
+package com.example.shorturl.model.payload.response.user;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UrlRequest {
-    private String url;
+@Builder
+public class UserResponse {
+    private String userName;
 }

@@ -1,8 +1,8 @@
 package com.example.shorturl.controller.api;
 
 import com.example.shorturl.model.url.UrlEntity;
-import com.example.shorturl.model.url.UrlRequest;
-import com.example.shorturl.model.url.UrlResponse;
+import com.example.shorturl.model.payload.request.url.UrlRequest;
+import com.example.shorturl.model.payload.response.url.UrlResponse;
 import com.example.shorturl.service.url.ShortenUrlService;
 import com.example.shorturl.utils.exceptions.UrlNotFoundException;
 import org.apache.commons.lang3.StringUtils;

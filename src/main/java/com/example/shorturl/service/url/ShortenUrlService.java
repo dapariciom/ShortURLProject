@@ -1,8 +1,9 @@
 package com.example.shorturl.service.url;
 
 import com.example.shorturl.dao.UrlRepository;
+import com.example.shorturl.model.payload.request.url.UserUrlRequest;
 import com.example.shorturl.model.url.UrlEntity;
-import com.example.shorturl.model.url.UrlRequest;
+import com.example.shorturl.model.payload.request.url.UrlRequest;
 import com.example.shorturl.service.sequence.SequenceGeneratorService;
 import com.google.common.hash.Hashing;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,29 @@ public class ShortenUrlService implements IShortenUrlService {
                 .originalUrl(urlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusSeconds(TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS)))
+                .isDeleted(false)
+                .isExpired(false)
+                .build();
+
+        return save(urlEntity);
+    }
+
+    public Optional<UrlEntity> userShortUrl(UserUrlRequest userUrlRequest) {
+
+        String encodedUrl = encodeUrl(userUrlRequest.getUrl());
+
+        Long expirationTime = userUrlRequest.getExpirationTime() != null ? userUrlRequest.getExpirationTime() :
+                TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS);
+
+        UrlEntity urlEntity = UrlEntity.builder()
+                .id(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME))
+                //TODO: Add alias logic instead of encoded shortUrl
+                .shortUrl(encodedUrl)
+                .alias(userUrlRequest.getAlias())
+                .completeShortUrl("http://localhost:8080/api/v2/url/user/redirect/" + encodedUrl)
+                .originalUrl(userUrlRequest.getUrl())
+                .creationDate(LocalDateTime.now())
+                .expirationDate(LocalDateTime.now().plusSeconds(expirationTime))
                 .isDeleted(false)
                 .isExpired(false)
                 .build();

@@ -1,7 +1,7 @@
 package com.example.shorturl.service.user;
 
 import com.example.shorturl.model.user.UserEntity;
-import com.example.shorturl.model.user.UserRequest;
+import com.example.shorturl.model.payload.request.user.UserRequest;
 
 public interface IUserService {
 

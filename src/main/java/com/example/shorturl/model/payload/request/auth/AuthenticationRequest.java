@@ -1,4 +1,4 @@
-package com.example.shorturl.model.auth;
+package com.example.shorturl.model.payload.request.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
