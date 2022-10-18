@@ -31,7 +31,7 @@ public class ShortenUrlService implements IShortenUrlService {
         this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    public Optional<UrlEntity> shortUrl(UrlRequest urlRequest) {
+    public UrlEntity shortUrl(UrlRequest urlRequest) {
 
         String encodedUrl = encodeUrl(urlRequest.getUrl());
 
@@ -50,7 +50,7 @@ public class ShortenUrlService implements IShortenUrlService {
         return save(urlEntity);
     }
 
-    public Optional<UrlEntity> userShortUrl(UserUrlRequest userUrlRequest) {
+    public UrlEntity userShortUrl(UserUrlRequest userUrlRequest) {
 
         String encodedUrl = encodeUrl(userUrlRequest.getUrl());
 
@@ -91,8 +91,8 @@ public class ShortenUrlService implements IShortenUrlService {
         return optionalUrl;
     }
 
-    private Optional<UrlEntity> save(UrlEntity urlEntity){
-        return Optional.ofNullable(urlRepository.save(urlEntity));
+    private UrlEntity save(UrlEntity urlEntity){
+        return urlRepository.save(urlEntity);
     }
 
     public Optional<UrlEntity> findById(Long id){

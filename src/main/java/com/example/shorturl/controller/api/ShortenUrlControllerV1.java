@@ -40,16 +40,14 @@ public class ShortenUrlControllerV1 {
         if(Objects.isNull(urlRequest) || StringUtils.isEmpty(urlRequest.getUrl()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
 
-        Optional<UrlEntity> optionalUrl = shortenUrlService.shortUrl(urlRequest);
-
-        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url is missing"));
+        UrlEntity url = shortenUrlService.shortUrl(urlRequest);
 
         return new ResponseEntity<>(
                 UrlResponse.builder()
-                        .shorUrl(optionalUrl.get().getShortUrl())
-                        .completeShorUrl(optionalUrl.get().getCompleteShortUrl())
-                        .originalUrl(optionalUrl.get().getOriginalUrl())
-                        .expirationDate(optionalUrl.get().getExpirationDate())
+                        .shorUrl(url.getShortUrl())
+                        .completeShorUrl(url.getCompleteShortUrl())
+                        .originalUrl(url.getOriginalUrl())
+                        .expirationDate(url.getExpirationDate())
                         .build(), HttpStatus.OK);
     }
 
