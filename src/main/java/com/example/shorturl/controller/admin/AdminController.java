@@ -1,7 +1,7 @@
 package com.example.shorturl.controller.admin;
 
-import com.example.shorturl.model.user.AdminUserRequest;
-import com.example.shorturl.model.user.AdminUserResponse;
+import com.example.shorturl.model.payload.request.user.AdminUserRequest;
+import com.example.shorturl.model.payload.response.user.AdminUserResponse;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.service.user.UserService;
 import org.springframework.http.HttpStatus;

@@ -4,7 +4,7 @@ import com.example.shorturl.dao.RoleRepository;
 import com.example.shorturl.dao.UserRepository;
 import com.example.shorturl.model.roles.ERole;
 import com.example.shorturl.model.roles.RoleEntity;
-import com.example.shorturl.model.user.UserRequest;
+import com.example.shorturl.model.payload.request.user.UserRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

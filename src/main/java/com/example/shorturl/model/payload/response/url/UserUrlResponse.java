@@ -1,4 +1,4 @@
-package com.example.shorturl.model.url;
+package com.example.shorturl.model.payload.response.url;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UrlResponse {
+public class UserUrlResponse {
     private String originalUrl;
+    private String alias;
     private String shorUrl;
     private String completeShorUrl;
     private LocalDateTime expirationDate;

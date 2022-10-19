@@ -1,7 +1,8 @@
 package com.example.shorturl.service.url;
 
+import com.example.shorturl.model.payload.request.url.UserUrlRequest;
 import com.example.shorturl.model.url.UrlEntity;
-import com.example.shorturl.model.url.UrlRequest;
+import com.example.shorturl.model.payload.request.url.UrlRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,10 +14,20 @@ public interface IShortenUrlService {
      * It saves an entity to the database that links both URL's
      *
      * @param urlRequest This request object contains the long URL provided by the user
-     * @return Optional<UrlEntity> This returns the entity created that contains the
+     * @return UrlEntity This returns the entity created that contains the
      * information of the long and short URL
      */
-    Optional<UrlEntity> shortUrl(UrlRequest urlRequest);
+    UrlEntity shortUrl(UrlRequest urlRequest);
+
+    /**
+     * This method is used to convert a long URL to a shorter encoded URL for
+     * registered users
+     *
+     * @param userUrlRequest This request object contains the long URL provided by the user
+     * @return UrlEntity This returns the entity created that contains the
+     * information of the long and short URL
+     */
+    UrlEntity userShortUrl(UserUrlRequest userUrlRequest);
 
     /**
      * This method uses an encoded short URL to obtain a linked long URL

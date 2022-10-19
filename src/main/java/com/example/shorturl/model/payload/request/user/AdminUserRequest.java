@@ -1,4 +1,4 @@
-package com.example.shorturl.model.user;
+package com.example.shorturl.model.payload.request.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,13 +8,14 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Data
-public class UserRequest {
+public class AdminUserRequest {
 
     @NotNull(message = "username shouldn't be null")
     private String userName;
@@ -26,7 +27,8 @@ public class UserRequest {
 
     private String lastName;
 
-    @NotNull
     private String password;
+
+    private Set<String> roles;
 
 }

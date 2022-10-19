@@ -25,6 +25,7 @@ public class UrlEntity {
     private long id;
     @NotNull
     private String originalUrl;
+    private String alias;
     private String shortUrl;
     private String completeShortUrl;
     private LocalDateTime creationDate;
