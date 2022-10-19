@@ -47,7 +47,6 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v2/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/user").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/admin").hasRole("ADMIN")
                 .and().httpBasic();
 
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
