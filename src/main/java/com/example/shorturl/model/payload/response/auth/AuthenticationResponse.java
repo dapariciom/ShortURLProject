@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 public class AuthenticationResponse {
 
-    @JsonProperty("username")
+    @JsonProperty("user_name")
     private String userName;
 
     private String email;

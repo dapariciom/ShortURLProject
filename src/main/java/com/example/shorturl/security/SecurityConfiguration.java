@@ -1,8 +1,8 @@
 package com.example.shorturl.security;
 
 
-import com.example.shorturl.security.jwt.JwtAccessDeniedHandler;
-import com.example.shorturl.security.jwt.JwtAuthEntryPoint;
+import com.example.shorturl.security.exception.handling.MyAccessDeniedHandler;
+import com.example.shorturl.security.exception.handling.MyAuthEntryPoint;
 import com.example.shorturl.security.jwt.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,12 +26,12 @@ public class SecurityConfiguration {
 
     private MyUserDetailsService myUserDetailsService;
     private JwtRequestFilter jwtRequestFilter;
-    private JwtAuthEntryPoint jwtAuthEntryPoint;
+    private MyAuthEntryPoint myAuthEntryPoint;
 
-    public SecurityConfiguration(final MyUserDetailsService myUserDetailsService, final JwtRequestFilter jwtRequestFilter, final JwtAuthEntryPoint jwtAuthEntryPoint){
+    public SecurityConfiguration(final MyUserDetailsService myUserDetailsService, final JwtRequestFilter jwtRequestFilter, final MyAuthEntryPoint myAuthEntryPoint){
         this.myUserDetailsService = myUserDetailsService;
         this.jwtRequestFilter = jwtRequestFilter;
-        this.jwtAuthEntryPoint = jwtAuthEntryPoint;
+        this.myAuthEntryPoint = myAuthEntryPoint;
     }
 
     @Bean
@@ -41,13 +41,13 @@ public class SecurityConfiguration {
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
-        return new JwtAccessDeniedHandler();
+        return new MyAccessDeniedHandler();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).accessDeniedHandler(accessDeniedHandler()).and()
+                .exceptionHandling().authenticationEntryPoint(myAuthEntryPoint).accessDeniedHandler(accessDeniedHandler()).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/**").permitAll()

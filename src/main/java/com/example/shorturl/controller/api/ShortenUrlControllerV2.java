@@ -45,6 +45,7 @@ public class ShortenUrlControllerV2 {
         return new ResponseEntity<>(
                 UserUrlResponse.builder()
                         .shortUrl(url.getShortUrl())
+                        .createdBy(url.getCreatedBy())
                         .alias(url.getAlias())
                         .completeShorUrl(url.getCompleteShortUrl())
                         .originalUrl(url.getOriginalUrl())

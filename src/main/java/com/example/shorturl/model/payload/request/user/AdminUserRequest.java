@@ -18,17 +18,17 @@ import java.util.Set;
 @Data
 public class AdminUserRequest {
 
-    @JsonProperty("username")
+    @JsonProperty("user_name")
     @NotNull(message = "username shouldn't be null")
     private String userName;
 
     @Email(message = "invalid email address")
     private String email;
 
-    @JsonProperty("firstname")
+    @JsonProperty("first_name")
     private String firstName;
 
-    @JsonProperty("lastname")
+    @JsonProperty("last_name")
     private String lastName;
 
     private String password;

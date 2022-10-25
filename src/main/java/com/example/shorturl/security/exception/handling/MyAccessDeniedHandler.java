@@ -1,4 +1,4 @@
-package com.example.shorturl.security.jwt;
+package com.example.shorturl.security.exception.handling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JwtAccessDeniedHandler implements AccessDeniedHandler {
+public class MyAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,

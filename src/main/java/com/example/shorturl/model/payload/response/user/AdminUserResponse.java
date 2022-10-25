@@ -17,7 +17,7 @@ import java.util.Set;
 @Builder
 public class AdminUserResponse {
 
-    @JsonProperty("username")
+    @JsonProperty("user_name")
     private String userName;
 
     private String password;

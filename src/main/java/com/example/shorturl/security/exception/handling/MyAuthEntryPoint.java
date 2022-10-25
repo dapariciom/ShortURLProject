@@ -1,4 +1,4 @@
-package com.example.shorturl.security.jwt;
+package com.example.shorturl.security.exception.handling;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
+public class MyAuthEntryPoint implements AuthenticationEntryPoint {
 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)

@@ -16,7 +16,7 @@ public class UserUrlRequest {
 
     private String alias;
 
-    @JsonProperty("expirationtime")
+    @JsonProperty("expiration_time")
     private Long expirationTime;
 
 }

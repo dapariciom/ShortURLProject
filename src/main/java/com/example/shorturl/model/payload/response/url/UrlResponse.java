@@ -16,16 +16,16 @@ import java.time.LocalDateTime;
 @Setter
 public class UrlResponse {
 
-    @JsonProperty("originalurl")
+    @JsonProperty("original_url")
     private String originalUrl;
 
-    @JsonProperty("shorturl")
+    @JsonProperty("short_url")
     private String shorUrl;
 
-    @JsonProperty("completeshorturl")
+    @JsonProperty("complete_short_url")
     private String completeShorUrl;
 
-    @JsonProperty("expirationdate")
+    @JsonProperty("expiration_date")
     private LocalDateTime expirationDate;
 
 }
