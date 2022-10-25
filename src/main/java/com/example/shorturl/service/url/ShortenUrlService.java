@@ -39,7 +39,7 @@ public class ShortenUrlService implements IShortenUrlService {
                 .id(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME))
                 .shortUrl(encodedUrl)
                 //TODO: Make dynamic
-                .completeShortUrl("http://localhost:8080/api/v1/url/redirect/" + encodedUrl)
+                .completeShortUrl("http://localhost:8080/api/redirect/" + encodedUrl)
                 .originalUrl(urlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusSeconds(TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS)))
@@ -52,18 +52,20 @@ public class ShortenUrlService implements IShortenUrlService {
 
     public UrlEntity userShortUrl(Long userId, UserUrlRequest userUrlRequest) {
 
-        String encodedUrl = encodeUrl(userUrlRequest.getUrl());
+        String alias = userUrlRequest.getAlias();
+
+        String encodedUrl = alias != null ? alias :
+                encodeUrl(userUrlRequest.getUrl());
 
         Long expirationTime = userUrlRequest.getExpirationTime() != null ? userUrlRequest.getExpirationTime() :
                 TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS);
 
         UrlEntity urlEntity = UrlEntity.builder()
                 .id(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME))
-                //TODO: Add alias logic instead of encoded shortUrl
                 .shortUrl(encodedUrl)
                 .alias(userUrlRequest.getAlias())
                 .createdBy(userId)
-                .completeShortUrl("http://localhost:8080/api/v2/url/user/redirect/" + encodedUrl)
+                .completeShortUrl("http://localhost:8080/api/redirect/" + encodedUrl)
                 .originalUrl(userUrlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusSeconds(expirationTime))
@@ -94,6 +96,10 @@ public class ShortenUrlService implements IShortenUrlService {
 
     private UrlEntity save(UrlEntity urlEntity){
         return urlRepository.save(urlEntity);
+    }
+
+    public Boolean existsByAlias(String alias){
+        return alias != null ? urlRepository.existsByAlias(alias) : false;
     }
 
     public Optional<UrlEntity> findById(Long id){

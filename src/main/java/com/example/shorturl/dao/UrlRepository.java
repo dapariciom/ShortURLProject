@@ -18,4 +18,13 @@ public interface UrlRepository extends MongoRepository<UrlEntity, Long> {
      */
     Optional<UrlEntity> findByShortUrl(String shortUrl);
 
+    /**
+     * This method is used to check if an UrlEntity exists
+     * with a specific alias
+     *
+     * @param alias This is the alias to look for
+     * @return Boolean Returns true if an entity was found
+     */
+    Boolean existsByAlias(String alias);
+
 }

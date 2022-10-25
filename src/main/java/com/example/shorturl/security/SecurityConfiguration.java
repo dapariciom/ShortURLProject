@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                 .exceptionHandling().authenticationEntryPoint(myAuthEntryPoint).accessDeniedHandler(accessDeniedHandler()).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/api/redirect/**").permitAll()
                 .antMatchers("/api/v1/**").permitAll()
                 .antMatchers("/api/v2/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
