@@ -1,6 +1,7 @@
 package com.example.shorturl.security;
 
 
+import com.example.shorturl.security.jwt.JwtAccessDeniedHandler;
 import com.example.shorturl.security.jwt.JwtAuthEntryPoint;
 import com.example.shorturl.security.jwt.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -38,9 +40,14 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new JwtAccessDeniedHandler();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().and().csrf().disable()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).and()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).accessDeniedHandler(accessDeniedHandler()).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/**").permitAll()

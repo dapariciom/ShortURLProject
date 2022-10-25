@@ -4,8 +4,10 @@ import com.example.shorturl.model.payload.request.user.AdminUserRequest;
 import com.example.shorturl.model.payload.response.user.AdminUserResponse;
 import com.example.shorturl.model.user.UserEntity;
 import com.example.shorturl.service.user.UserService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -41,6 +44,16 @@ public class AdminController {
                         .email(user.getEmail())
                         .roles(user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet()))
                         .build(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserEntity>> getUsers() {
+
+        List<UserEntity> userList = userService.findAll();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(userList);
     }
 
 }

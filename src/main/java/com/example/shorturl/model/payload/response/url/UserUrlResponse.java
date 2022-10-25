@@ -1,5 +1,6 @@
 package com.example.shorturl.model.payload.response.url;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +15,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UserUrlResponse {
+
+    @JsonProperty("originalurl")
     private String originalUrl;
+
     private String alias;
-    private String shorUrl;
+
+    @JsonProperty("shortUrl")
+    private String shortUrl;
+
+    @JsonProperty("completeshorturl")
     private String completeShorUrl;
+
+    @JsonProperty("expirationdate")
     private LocalDateTime expirationDate;
+
 }

@@ -22,12 +22,12 @@ public interface IShortenUrlService {
     /**
      * This method is used to convert a long URL to a shorter encoded URL for
      * registered users
-     *
+     * @param userId The id of the user that created the url request
      * @param userUrlRequest This request object contains the long URL provided by the user
      * @return UrlEntity This returns the entity created that contains the
      * information of the long and short URL
      */
-    UrlEntity userShortUrl(UserUrlRequest userUrlRequest);
+    UrlEntity userShortUrl(Long userId, UserUrlRequest userUrlRequest);
 
     /**
      * This method uses an encoded short URL to obtain a linked long URL

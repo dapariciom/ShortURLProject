@@ -23,14 +23,24 @@ public class UrlEntity {
 
     @Id
     private long id;
+
     @NotNull
     private String originalUrl;
+
+    private long createdBy;
+
     private String alias;
+
     private String shortUrl;
+
     private String completeShortUrl;
+
     private LocalDateTime creationDate;
+
     private LocalDateTime expirationDate;
+
     private Boolean isDeleted;
+
     private Boolean isExpired;
 
     public void checkIfHasExpired(){

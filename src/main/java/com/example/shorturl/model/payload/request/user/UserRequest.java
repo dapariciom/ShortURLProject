@@ -1,5 +1,6 @@
 package com.example.shorturl.model.payload.request.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -16,14 +17,17 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UserRequest {
 
+    @JsonProperty("username")
     @NotNull(message = "username shouldn't be null")
     private String userName;
 
     @Email(message = "invalid email address")
     private String email;
 
+    @JsonProperty("firstname")
     private String firstName;
 
+    @JsonProperty("lastname")
     private String lastName;
 
     @NotNull

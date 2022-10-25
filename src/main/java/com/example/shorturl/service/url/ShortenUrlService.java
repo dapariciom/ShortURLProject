@@ -50,7 +50,7 @@ public class ShortenUrlService implements IShortenUrlService {
         return save(urlEntity);
     }
 
-    public UrlEntity userShortUrl(UserUrlRequest userUrlRequest) {
+    public UrlEntity userShortUrl(Long userId, UserUrlRequest userUrlRequest) {
 
         String encodedUrl = encodeUrl(userUrlRequest.getUrl());
 
@@ -62,6 +62,7 @@ public class ShortenUrlService implements IShortenUrlService {
                 //TODO: Add alias logic instead of encoded shortUrl
                 .shortUrl(encodedUrl)
                 .alias(userUrlRequest.getAlias())
+                .createdBy(userId)
                 .completeShortUrl("http://localhost:8080/api/v2/url/user/redirect/" + encodedUrl)
                 .originalUrl(userUrlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
