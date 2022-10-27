@@ -6,18 +6,24 @@ import com.example.shorturl.model.url.UrlEntity;
 import com.example.shorturl.security.MyUserDetails;
 import com.example.shorturl.service.url.ShortenUrlService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v2/url")
@@ -39,9 +45,7 @@ public class ShortenUrlControllerV2 {
         if(shortenUrlService.existsByAlias(userUrlRequest.getAlias()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alias already used");
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        MyUserDetails userEntity = (MyUserDetails) authentication.getPrincipal();
-        Long userId = userEntity.getId();
+        Long userId = getAuthenticatedUserId();
 
         UrlEntity url = shortenUrlService.userShortUrl(userId, userUrlRequest);
 
@@ -54,6 +58,42 @@ public class ShortenUrlControllerV2 {
                         .originalUrl(url.getOriginalUrl())
                         .expirationDate(url.getExpirationDate())
                         .build(), HttpStatus.OK);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<List<UrlEntity>> getUrls(){
+
+        Long userId = getAuthenticatedUserId();
+
+        List<UrlEntity> urlList = shortenUrlService.findByCreatedBy(userId);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(urlList);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+
+        Long userId = getAuthenticatedUserId();
+
+        Optional<UrlEntity> optionalUrl = shortenUrlService.findByIdAndCreatedBy(id, userId);
+
+        UrlEntity url = optionalUrl.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url not found"));
+
+        shortenUrlService.softDeleteById(url.getId());
+
+        HttpHeaders headers = new HttpHeaders();
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).headers(headers).build();
+    }
+
+    public Long getAuthenticatedUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails userEntity = (MyUserDetails) authentication.getPrincipal();
+        return userEntity.getId();
     }
 
 }
