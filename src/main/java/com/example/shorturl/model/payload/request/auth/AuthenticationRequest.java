@@ -1,5 +1,6 @@
 package com.example.shorturl.model.payload.request.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,9 @@ import lombok.Setter;
 @Builder
 public class AuthenticationRequest {
 
+    @JsonProperty("user_name")
     private String userName;
+
     private String password;
 
 }

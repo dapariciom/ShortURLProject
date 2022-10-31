@@ -1,13 +1,13 @@
 package com.example.shorturl.service.url;
 
 import com.example.shorturl.dao.UrlRepository;
+import com.example.shorturl.model.payload.request.url.UrlRequest;
 import com.example.shorturl.model.payload.request.url.UserUrlRequest;
 import com.example.shorturl.model.url.UrlEntity;
-import com.example.shorturl.model.payload.request.url.UrlRequest;
 import com.example.shorturl.service.sequence.SequenceGeneratorService;
 import com.google.common.hash.Hashing;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -35,11 +35,12 @@ public class ShortenUrlService implements IShortenUrlService {
 
         String encodedUrl = encodeUrl(urlRequest.getUrl());
 
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
         UrlEntity urlEntity = UrlEntity.builder()
                 .id(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME))
                 .shortUrl(encodedUrl)
-                //TODO: Make dynamic
-                .completeShortUrl("http://localhost:8080/api/v1/url/redirect/" + encodedUrl)
+                .completeShortUrl(baseUrl + "/api/redirect/" + encodedUrl)
                 .originalUrl(urlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusSeconds(TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS)))
@@ -50,19 +51,24 @@ public class ShortenUrlService implements IShortenUrlService {
         return save(urlEntity);
     }
 
-    public UrlEntity userShortUrl(UserUrlRequest userUrlRequest) {
+    public UrlEntity userShortUrl(Long userId, UserUrlRequest userUrlRequest) {
 
-        String encodedUrl = encodeUrl(userUrlRequest.getUrl());
+        String alias = userUrlRequest.getAlias();
+
+        String encodedUrl = alias != null ? alias :
+                encodeUrl(userUrlRequest.getUrl());
 
         Long expirationTime = userUrlRequest.getExpirationTime() != null ? userUrlRequest.getExpirationTime() :
                 TimeUnit.SECONDS.convert(EXPIRATION_TIME, TimeUnit.SECONDS);
 
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
         UrlEntity urlEntity = UrlEntity.builder()
                 .id(sequenceGeneratorService.getSequenceNumber(SEQUENCE_NAME))
-                //TODO: Add alias logic instead of encoded shortUrl
                 .shortUrl(encodedUrl)
                 .alias(userUrlRequest.getAlias())
-                .completeShortUrl("http://localhost:8080/api/v2/url/user/redirect/" + encodedUrl)
+                .createdBy(userId)
+                .completeShortUrl(baseUrl + "/api/redirect/" + encodedUrl)
                 .originalUrl(userUrlRequest.getUrl())
                 .creationDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusSeconds(expirationTime))
@@ -93,6 +99,29 @@ public class ShortenUrlService implements IShortenUrlService {
 
     private UrlEntity save(UrlEntity urlEntity){
         return urlRepository.save(urlEntity);
+    }
+
+    public Optional<UrlEntity> findByAliasAndCreatedBy(String alias, Long createdBy){
+
+        Optional<UrlEntity> optionalUrl = urlRepository.findByAliasAndCreatedByAndIsDeletedAndIsExpired(alias, createdBy, false, false);
+
+        if(optionalUrl.isPresent()) {
+            optionalUrl.get().checkIfHasExpired();
+            if (optionalUrl.get().getIsExpired()) {
+                save(optionalUrl.get());
+                return Optional.empty();
+            }
+        }
+
+        return optionalUrl;
+    }
+
+    public List<UrlEntity> findByCreatedBy(Long createdBy){
+        List<UrlEntity> urlList = urlRepository.findByCreatedByAndIsDeletedAndIsExpired(createdBy, false, false);
+        return checkIfUrlsHaveExpired(urlList);
+    }
+    public Optional<UrlEntity> findByIdAndCreatedBy(Long id, Long createdBy){
+        return urlRepository.findByIdAndCreatedBy(id, createdBy);
     }
 
     public Optional<UrlEntity> findById(Long id){
@@ -130,6 +159,17 @@ public class ShortenUrlService implements IShortenUrlService {
 
         return urlList.stream()
                 .filter(url -> !url.getIsDeleted())
+                .collect(Collectors.toList());
+    }
+
+    public List<UrlEntity> checkIfUrlsHaveExpired(List<UrlEntity> list){
+        list.stream().forEach(url -> {
+                    url.checkIfHasExpired();
+                    if(url.getIsExpired()) save(url);
+                });
+
+        return list.stream()
+                .filter(url -> !url.getIsExpired())
                 .collect(Collectors.toList());
     }
 

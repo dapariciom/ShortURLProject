@@ -2,11 +2,11 @@ package com.example.shorturl.service.user;
 
 import com.example.shorturl.dao.RoleRepository;
 import com.example.shorturl.dao.UserRepository;
+import com.example.shorturl.model.payload.request.user.AdminUserRequest;
+import com.example.shorturl.model.payload.request.user.UserRequest;
 import com.example.shorturl.model.roles.ERole;
 import com.example.shorturl.model.roles.RoleEntity;
-import com.example.shorturl.model.payload.request.user.AdminUserRequest;
 import com.example.shorturl.model.user.UserEntity;
-import com.example.shorturl.model.payload.request.user.UserRequest;
 import com.example.shorturl.utils.exceptions.ERoleNotFoundException;
 import com.example.shorturl.utils.exceptions.UserException;
 import com.google.common.base.Enums;
@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -86,6 +87,10 @@ public class UserService implements IUserService{
 
     public Optional<UserEntity> findFirstByUserNameOrEmail(String userName, String email){
         return userRepository.findFirstByUserNameOrEmail(userName, email);
+    }
+
+    public List<UserEntity> findAll(){
+        return userRepository.findAll();
     }
 
     private String generateRandomSpecialCharacters(int length) {
