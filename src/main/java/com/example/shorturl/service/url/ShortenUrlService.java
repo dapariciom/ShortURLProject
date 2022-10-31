@@ -101,8 +101,19 @@ public class ShortenUrlService implements IShortenUrlService {
         return urlRepository.save(urlEntity);
     }
 
-    public Boolean existsByAlias(String alias){
-        return alias != null ? urlRepository.existsByAlias(alias) : false;
+    public Optional<UrlEntity> findByAliasAndCreatedBy(String alias, Long createdBy){
+
+        Optional<UrlEntity> optionalUrl = urlRepository.findByAliasAndCreatedByAndIsDeletedAndIsExpired(alias, createdBy, false, false);
+
+        if(optionalUrl.isPresent()) {
+            optionalUrl.get().checkIfHasExpired();
+            if (optionalUrl.get().getIsExpired()) {
+                save(optionalUrl.get());
+                return Optional.empty();
+            }
+        }
+
+        return optionalUrl;
     }
 
     public List<UrlEntity> findByCreatedBy(Long createdBy){

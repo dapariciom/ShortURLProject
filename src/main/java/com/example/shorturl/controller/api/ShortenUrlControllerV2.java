@@ -42,12 +42,12 @@ public class ShortenUrlControllerV2 {
         if(Objects.isNull(userUrlRequest) || StringUtils.isEmpty(userUrlRequest.getUrl()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Url request is missing or empty");
 
-        if(shortenUrlService.existsByAlias(userUrlRequest.getAlias()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Alias already used");
-
         Long userId = getAuthenticatedUserId();
 
-        UrlEntity url = shortenUrlService.userShortUrl(userId, userUrlRequest);
+        Optional<UrlEntity> optionalUrl = shortenUrlService.findByAliasAndCreatedBy(userUrlRequest.getAlias(), userId);
+
+        UrlEntity url = optionalUrl.isPresent() ? optionalUrl.get() :
+                shortenUrlService.userShortUrl(userId, userUrlRequest);
 
         return new ResponseEntity<>(
                 UserUrlResponse.builder()

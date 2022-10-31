@@ -20,13 +20,17 @@ public interface UrlRepository extends MongoRepository<UrlEntity, Long> {
     Optional<UrlEntity> findByShortUrl(String shortUrl);
 
     /**
-     * This method is used to check if an UrlEntity exists
-     * with a specific alias
+     * This method is used to check if an UrlEntity exists with a specific alias
+     * created by a specific user. It includes parameters to look for an entity
+     * that has been or not been deleted or expired
      *
      * @param alias This is the alias to look for
-     * @return Boolean Returns true if an entity was found
+     * @param createdBy This is the userId that created the entity to look for
+     * @param isDeleted True if the entity has been deleted
+     * @param isExpired True if the entity has been expired
+     * @return Optional<UrlEntity> This returns the found url entity
      */
-    Boolean existsByAlias(String alias);
+    Optional<UrlEntity> findByAliasAndCreatedByAndIsDeletedAndIsExpired(String alias, Long createdBy, Boolean isDeleted, Boolean isExpired);
 
     /**
      * This method is used to look for a list of UrlEntities created by
