@@ -1,12 +1,12 @@
 package com.example.shorturl.controller.auth;
 
 import com.example.shorturl.model.payload.request.auth.AuthenticationRequest;
+import com.example.shorturl.model.payload.request.user.UserRequest;
 import com.example.shorturl.model.payload.response.auth.AuthenticationResponse;
+import com.example.shorturl.model.payload.response.user.UserResponse;
 import com.example.shorturl.model.roles.ERole;
 import com.example.shorturl.model.roles.RoleEntity;
 import com.example.shorturl.model.user.UserEntity;
-import com.example.shorturl.model.payload.request.user.UserRequest;
-import com.example.shorturl.model.payload.response.user.UserResponse;
 import com.example.shorturl.security.MyUserDetails;
 import com.example.shorturl.security.MyUserDetailsService;
 import com.example.shorturl.security.jwt.JwtUtil;
