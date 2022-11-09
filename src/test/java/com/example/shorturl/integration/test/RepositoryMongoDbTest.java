@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
 @SpringBootTest
-public class MongoDbTest {
+public class RepositoryMongoDbTest {
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.2");
@@ -32,15 +32,13 @@ public class MongoDbTest {
     private UrlRepository urlRepository;
 
     @AfterEach
-    void cleanUp() {
-        this.urlRepository.deleteAll();
-    }
+    void cleanUp() { urlRepository.deleteAll();}
 
     @Test
     void saveAndReturnUrlsFromRepository() {
-        this.urlRepository.save(UrlEntity.builder().id(1).originalUrl("https://www.youtube.com/").build());
-        this.urlRepository.save(UrlEntity.builder().id(2).originalUrl("https://www.facebook.com/").build());
-        this.urlRepository.save(UrlEntity.builder().id(3).originalUrl("https://www.instagram.com/").build());
+        urlRepository.save(UrlEntity.builder().id(1).originalUrl("https://www.youtube.com/").build());
+        urlRepository.save(UrlEntity.builder().id(2).originalUrl("https://www.facebook.com/").build());
+        urlRepository.save(UrlEntity.builder().id(3).originalUrl("https://www.instagram.com/").build());
         List<UrlEntity> urlList = urlRepository.findAll();
         assertEquals(3, urlList.size());
     }
