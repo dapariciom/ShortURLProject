@@ -43,6 +43,7 @@ public class ShortenUrlControllerV1 {
 
         return new ResponseEntity<>(
                 UrlResponse.builder()
+                        .id(url.getId())
                         .shorUrl(url.getShortUrl())
                         .completeShorUrl(url.getCompleteShortUrl())
                         .originalUrl(url.getOriginalUrl())

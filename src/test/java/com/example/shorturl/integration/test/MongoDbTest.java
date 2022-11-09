@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
 @SpringBootTest
-//@DataMongoTest(excludeAutoConfiguration = EmbeddedMongoAutoConfiguration.class)
 public class MongoDbTest {
 
     @Container
@@ -38,12 +37,12 @@ public class MongoDbTest {
     }
 
     @Test
-    void shouldReturnListOfCustomerWithMatchingRate() {
+    void saveAndReturnUrlsFromRepository() {
         this.urlRepository.save(UrlEntity.builder().id(1).originalUrl("https://www.youtube.com/").build());
         this.urlRepository.save(UrlEntity.builder().id(2).originalUrl("https://www.facebook.com/").build());
         this.urlRepository.save(UrlEntity.builder().id(3).originalUrl("https://www.instagram.com/").build());
-        List<UrlEntity> customers = urlRepository.findAll();
-        assertEquals(3, customers.size());
+        List<UrlEntity> urlList = urlRepository.findAll();
+        assertEquals(3, urlList.size());
     }
 
 }
