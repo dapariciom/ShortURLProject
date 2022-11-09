@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @Setter
 public class UrlResponse {
 
+    private Long id;
+
     @JsonProperty("original_url")
     private String originalUrl;
 
